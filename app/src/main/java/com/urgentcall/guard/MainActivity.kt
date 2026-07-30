@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import android.media.AudioManager
 import android.content.Context
 
 class MainActivity : AppCompatActivity() {
@@ -87,8 +86,9 @@ class MainActivity : AppCompatActivity() {
         val missing = requiredPermissions.filter {
             checkSelfPermission(it) != android.content.pm.PackageManager.PERMISSION_GRANTED
         }
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val dndGranted = audioManager.isNotificationPolicyAccessGranted
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val dndGranted = notificationManager.isNotificationPolicyAccessGranted
 
         statusText.text = when {
             missing.isNotEmpty() -> getString(R.string.status_missing_permissions, missing.size)

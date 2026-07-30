@@ -1,5 +1,6 @@
 package com.urgentcall.guard
 
+import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioManager
 import android.os.Handler
@@ -11,11 +12,17 @@ object AudioManagerHelper {
     private var savedVolumePercent: Int = 0
     private var isAudioOverridden: Boolean = false
 
+    private fun hasDndAccess(context: Context): Boolean {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return notificationManager.isNotificationPolicyAccessGranted
+    }
+
     fun forceMaxVolumeRingtone(context: Context) {
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         // Nécessite l'accès à la politique de notifications (DND) sur Android 6+
-        if (!audioManager.isNotificationPolicyAccessGranted) return
+        if (!hasDndAccess(context)) return
 
         if (!isAudioOverridden) {
             savedRingerMode = audioManager.ringerMode
@@ -34,7 +41,7 @@ object AudioManagerHelper {
         if (!isAudioOverridden) return
 
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        if (!audioManager.isNotificationPolicyAccessGranted) {
+        if (!hasDndAccess(context)) {
             isAudioOverridden = false
             return
         }
