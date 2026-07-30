@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">UrgentCall Guard</string>
+    <string name="notif_channel_name">Service de Surveillance UrgentCall Guard</string>
+    <string name="notif_channel_desc">Maintient l\'application active pour capturer les appels d\'urgence</string>
+    <string name="notif_title">UrgentCall Guard • Actif</string>
+    <string name="notif_text">Surveillance en arrière-plan des appels manqués en mode silencieux</string>
+
+    <string name="app_subtitle">Mode silencieux &amp; appels urgents</string>
+    <string name="service_switch_label">Activer la surveillance</string>
+    <string name="request_perms_button">Autoriser les permissions</string>
+    <string name="request_dnd_button">Autoriser l\'accès Ne pas déranger</string>
+
+    <string name="status_ready">✅ Tout est configuré. Le service surveille vos appels manqués.</string>
+    <string name="status_missing_permissions">⚠️ %1$d permission(s) manquante(s). Appuyez sur \"Autoriser les permissions\".</string>
+    <string name="status_missing_dnd">⚠️ Accès \"Ne pas déranger\" requis pour forcer la sonnerie. Appuyez sur le bouton dédié.</string>
+
+    <string name="nav_settings_button">Réglages</string>
+    <string name="nav_whitelist_button">Liste blanche</string>
+
+    <!-- Réglages -->
+    <string name="settings_title">Réglages</string>
+    <string name="settings_volume_threshold_label">Seuil de volume déclencheur (pourcentage)</string>
+    <string name="settings_timer_label">Fenêtre de rappel prioritaire (minutes)</string>
+    <string name="settings_sms_template_label">Message SMS d\'urgence (utilisez {TIMER} pour insérer le nombre de minutes)</string>
+    <string name="settings_immediate_whitelist_label">Franchissement immédiat pour la liste blanche</string>
+    <string name="settings_save_button">Enregistrer</string>
+    <string name="settings_saved_toast">Réglages enregistrés</string>
+
+    <!-- Liste blanche -->
+    <string name="whitelist_title">Liste blanche</string>
+    <string name="whitelist_empty">Aucun contact prioritaire. Ajoutez-en un avec le bouton +.</string>
+    <string name="whitelist_add_title">Ajouter un contact prioritaire</string>
+    <string name="whitelist_name_hint">Nom</string>
+    <string name="whitelist_phone_hint">Numéro de téléphone</string>
+    <string name="whitelist_add_button">Ajouter</string>
+    <string name="whitelist_cancel_button">Annuler</string>
+    <string name="whitelist_delete_button">Supprimer</string>
+</resources>
