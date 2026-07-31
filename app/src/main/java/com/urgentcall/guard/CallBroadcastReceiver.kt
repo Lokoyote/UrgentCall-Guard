@@ -42,7 +42,12 @@ class CallBroadcastReceiver : BroadcastReceiver() {
                     // Rappel dans la fenêtre d'urgence -> FORCE le volume max
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
                 } else if (number != null && WhitelistHelper.isWhitelistedAndImmediate(context, number)) {
-                    // Contact prioritaire -> franchissement immédiat
+                    // Contact prioritaire (liste blanche manuelle) -> franchissement immédiat
+                    AudioManagerHelper.forceMaxVolumeRingtone(context)
+                } else if (number != null && PreferencesHelper.isAllowSystemFavorites(context) &&
+                    ContactsHelper.isSystemFavorite(context, number)
+                ) {
+                    // Contact favori du téléphone -> franchissement immédiat
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
                 }
             }

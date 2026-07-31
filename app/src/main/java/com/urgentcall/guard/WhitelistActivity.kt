@@ -1,5 +1,6 @@
 package com.urgentcall.guard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 
 class WhitelistActivity : AppCompatActivity() {
 
@@ -24,7 +26,8 @@ class WhitelistActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.whitelistRecyclerView)
         emptyText = findViewById(R.id.emptyText)
-        val addButton = findViewById<android.widget.Button>(R.id.addContactButton)
+        val addButton = findViewById<MaterialButton>(R.id.addContactButton)
+        val addFromContactsButton = findViewById<MaterialButton>(R.id.addFromContactsButton)
 
         adapter = WhitelistAdapter(WhitelistHelper.getContacts(this).toMutableList()) { contact ->
             WhitelistHelper.removeContact(this, contact.phoneNumber)
@@ -34,7 +37,14 @@ class WhitelistActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         addButton.setOnClickListener { showAddContactDialog() }
+        addFromContactsButton.setOnClickListener {
+            startActivity(Intent(this, AddFromContactsActivity::class.java))
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        // Rafraîchit au retour de l'écran "Ajouter depuis les contacts"
         refreshList()
     }
 

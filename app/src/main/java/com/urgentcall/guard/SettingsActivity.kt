@@ -15,6 +15,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var timerInput: EditText
     private lateinit var smsTemplateInput: EditText
     private lateinit var immediateWhitelistSwitch: Switch
+    private lateinit var systemFavoritesSwitch: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,7 @@ class SettingsActivity : AppCompatActivity() {
         timerInput = findViewById(R.id.timerMinutesInput)
         smsTemplateInput = findViewById(R.id.smsTemplateInput)
         immediateWhitelistSwitch = findViewById(R.id.immediateWhitelistSwitch)
+        systemFavoritesSwitch = findViewById(R.id.systemFavoritesSwitch)
         val saveButton = findViewById<android.widget.Button>(R.id.saveSettingsButton)
 
         // Chargement des valeurs actuelles
@@ -35,6 +37,7 @@ class SettingsActivity : AppCompatActivity() {
         timerInput.setText(PreferencesHelper.getTimerMinutes(this).toString())
         smsTemplateInput.setText(PreferencesHelper.getSmsTemplate(this))
         immediateWhitelistSwitch.isChecked = PreferencesHelper.isImmediateWhitelistBreakthrough(this)
+        systemFavoritesSwitch.isChecked = PreferencesHelper.isAllowSystemFavorites(this)
 
         volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -54,11 +57,16 @@ class SettingsActivity : AppCompatActivity() {
             PreferencesHelper.getSmsTemplate(this)
         }
         val immediateWhitelist = immediateWhitelistSwitch.isChecked
+        val systemFavorites = systemFavoritesSwitch.isChecked
 
         PreferencesHelper.setVolumeThreshold(this, threshold)
         PreferencesHelper.setTimerMinutes(this, timerMinutes)
         PreferencesHelper.setSmsTemplate(this, smsTemplate)
         PreferencesHelper.setImmediateWhitelistBreakthrough(this, immediateWhitelist)
+        PreferencesHelper.setAllowSystemFavorites(this, systemFavorites)
+
+        // Met à jour la notification permanente si le service tourne déjà
+        UrgentCallForegroundService.refreshNotification(this)
 
         Toast.makeText(this, R.string.settings_saved_toast, Toast.LENGTH_SHORT).show()
         finish()

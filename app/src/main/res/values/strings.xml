@@ -3,16 +3,32 @@
     <string name="notif_channel_name">Service de Surveillance UrgentCall Guard</string>
     <string name="notif_channel_desc">Maintient l\'application active pour capturer les appels d\'urgence</string>
     <string name="notif_title">UrgentCall Guard • Actif</string>
-    <string name="notif_text">Surveillance en arrière-plan des appels manqués en mode silencieux</string>
+    <string name="notif_text_format">Seuil %1$d%% • Fenêtre de rappel %2$d min</string>
 
     <string name="app_subtitle">Mode silencieux &amp; appels urgents</string>
     <string name="service_switch_label">Activer la surveillance</string>
+    <string name="service_switch_subtitle">Fonctionne en arrière-plan, même app fermée</string>
     <string name="request_perms_button">Autoriser les permissions</string>
     <string name="request_dnd_button">Autoriser l\'accès Ne pas déranger</string>
+    <string name="request_battery_button">Désactiver l\'optimisation de batterie</string>
 
-    <string name="status_ready">✅ Tout est configuré. Le service surveille vos appels manqués.</string>
-    <string name="status_missing_permissions">⚠️ %1$d permission(s) manquante(s). Appuyez sur \"Autoriser les permissions\".</string>
-    <string name="status_missing_dnd">⚠️ Accès \"Ne pas déranger\" requis pour forcer la sonnerie. Appuyez sur le bouton dédié.</string>
+    <string name="summary_title">Résumé</string>
+    <string name="summary_current_volume">Volume actuel</string>
+    <string name="summary_threshold">Seuil configuré</string>
+    <string name="summary_timer">Fenêtre (min)</string>
+
+    <string name="permissions_title">État des autorisations</string>
+    <string name="permissions_all_granted">✅ Toutes les autorisations sont accordées</string>
+    <string name="permission_granted_state">Autorisé</string>
+    <string name="permission_missing_state">Manquant</string>
+
+    <string name="perm_phone_state">Détection des appels</string>
+    <string name="perm_call_log">Journal d\'appels</string>
+    <string name="perm_sms">Envoi de SMS</string>
+    <string name="perm_contacts">Accès aux contacts</string>
+    <string name="perm_notifications">Notifications</string>
+    <string name="perm_dnd">Accès Ne pas déranger</string>
+    <string name="perm_battery">Optimisation batterie désactivée</string>
 
     <string name="nav_settings_button">Réglages</string>
     <string name="nav_whitelist_button">Liste blanche</string>
@@ -23,16 +39,29 @@
     <string name="settings_timer_label">Fenêtre de rappel prioritaire (minutes)</string>
     <string name="settings_sms_template_label">Message SMS d\'urgence (utilisez {TIMER} pour insérer le nombre de minutes)</string>
     <string name="settings_immediate_whitelist_label">Franchissement immédiat pour la liste blanche</string>
+    <string name="settings_system_favorites_label">Inclure les favoris du téléphone comme prioritaires</string>
     <string name="settings_save_button">Enregistrer</string>
     <string name="settings_saved_toast">Réglages enregistrés</string>
 
     <!-- Liste blanche -->
     <string name="whitelist_title">Liste blanche</string>
-    <string name="whitelist_empty">Aucun contact prioritaire. Ajoutez-en un avec le bouton +.</string>
+    <string name="whitelist_empty">Aucun contact prioritaire. Ajoutez-en un ci-dessous.</string>
     <string name="whitelist_add_title">Ajouter un contact prioritaire</string>
     <string name="whitelist_name_hint">Nom</string>
     <string name="whitelist_phone_hint">Numéro de téléphone</string>
     <string name="whitelist_add_button">Ajouter</string>
+    <string name="whitelist_add_manual_button">Ajouter manuellement</string>
+    <string name="whitelist_add_from_contacts_button">Ajouter depuis les contacts</string>
     <string name="whitelist_cancel_button">Annuler</string>
     <string name="whitelist_delete_button">Supprimer</string>
+
+    <!-- Ajout depuis les contacts -->
+    <string name="contacts_picker_title">Contacts</string>
+    <string name="contacts_search_hint">Rechercher un nom…</string>
+    <string name="contacts_favorites_section">Favoris du téléphone</string>
+    <string name="contacts_search_section">Résultats de recherche</string>
+    <string name="contacts_empty_favorites">Aucun contact favori sur ce téléphone.</string>
+    <string name="contacts_empty_search">Aucun contact trouvé.</string>
+    <string name="contacts_add_action">Ajouter</string>
+    <string name="contacts_already_added">Ajouté ✓</string>
 </resources>
