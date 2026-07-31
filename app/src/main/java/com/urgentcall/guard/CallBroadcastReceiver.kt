@@ -38,13 +38,15 @@ class CallBroadcastReceiver : BroadcastReceiver() {
             TelephonyManager.CALL_STATE_RINGING -> {
                 incomingNumber = number
 
-                if (number != null && EmergencyTimerManager.isUrgentRecallWindowActive(number)) {
+                val isBlocked = number != null && BlacklistHelper.isBlacklisted(context, number)
+
+                if (!isBlocked && number != null && EmergencyTimerManager.isUrgentRecallWindowActive(number)) {
                     // Rappel dans la fenêtre d'urgence -> FORCE le volume max
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
-                } else if (number != null && WhitelistHelper.isWhitelistedAndImmediate(context, number)) {
+                } else if (!isBlocked && number != null && WhitelistHelper.isWhitelistedAndImmediate(context, number)) {
                     // Contact prioritaire (liste blanche manuelle) -> franchissement immédiat
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
-                } else if (number != null && PreferencesHelper.isAllowSystemFavorites(context) &&
+                } else if (!isBlocked && number != null && PreferencesHelper.isAllowSystemFavorites(context) &&
                     ContactsHelper.isSystemFavorite(context, number)
                 ) {
                     // Contact favori du téléphone -> franchissement immédiat
@@ -61,10 +63,8 @@ class CallBroadcastReceiver : BroadcastReceiver() {
 
             TelephonyManager.CALL_STATE_IDLE -> {
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
-                    // Appel manqué détecté
-                    if (number != null) {
-                        handleMissedCall(context, number)
-                    }
+                    // Appel manqué détecté (number peut être null si le numéro est masqué)
+                    handleMissedCall(context, number)
                 } else if (lastState == TelephonyManager.CALL_STATE_OFFHOOK) {
                     AudioManagerHelper.restoreInitialAudioSettings(context)
                 }
@@ -73,7 +73,35 @@ class CallBroadcastReceiver : BroadcastReceiver() {
         lastState = state
     }
 
-    private fun handleMissedCall(context: Context, phoneNumber: String) {
+    private fun handleMissedCall(context: Context, phoneNumber: String?) {
+        // 1) Numéro masqué / privé (pas de numéro exploitable)
+        if (BlacklistHelper.isHiddenNumber(phoneNumber)) {
+            if (BlacklistHelper.isBlockHiddenNumbers(context)) {
+                Log.i("UrgentCallGuard", "Numéro masqué : SMS/volume ignorés (réglage liste noire).")
+                return
+            }
+        }
+        val number = phoneNumber ?: return // impossible d'envoyer un SMS sans numéro, dans tous les cas
+
+        // 2) Numéro explicitement dans la liste noire
+        if (BlacklistHelper.isBlacklisted(context, number)) {
+            Log.i("UrgentCallGuard", "Numéro $number en liste noire : SMS/volume ignorés.")
+            return
+        }
+
+        // 3) Numéro inconnu (absent du répertoire), si l'option est activée
+        if (BlacklistHelper.isBlockUnknownNumbers(context) && !ContactsHelper.isNumberInContacts(context, number)) {
+            Log.i("UrgentCallGuard", "Numéro $number inconnu du répertoire : SMS/volume ignorés (réglage liste noire).")
+            return
+        }
+
+        // 4) Garde explicite : si on est déjà dans la fenêtre de rappel pour ce numéro,
+        // ce nouvel appel manqué EST le rappel attendu -> pas de second SMS.
+        if (EmergencyTimerManager.isUrgentRecallWindowActive(number)) {
+            Log.i("UrgentCallGuard", "Rappel de $number déjà en fenêtre d'urgence : pas de second SMS.")
+            return
+        }
+
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentRingerMode = audioManager.ringerMode
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING)
@@ -86,10 +114,10 @@ class CallBroadcastReceiver : BroadcastReceiver() {
             val timerMins = PreferencesHelper.getTimerMinutes(context)
             val smsText = PreferencesHelper.getSmsTemplate(context).replace("{TIMER}", timerMins.toString())
 
-            SmsHelper.sendSms(context, phoneNumber, smsText)
-            EmergencyTimerManager.startRecallTimer(context, phoneNumber, timerMins, currentRingerMode, volumePercent)
+            SmsHelper.sendSms(context, number, smsText)
+            EmergencyTimerManager.startRecallTimer(context, number, timerMins, currentRingerMode, volumePercent)
 
-            Log.i("UrgentCallGuard", "SMS d'urgence envoyé à $phoneNumber. Fenêtre de $timerMins min activée.")
+            Log.i("UrgentCallGuard", "SMS d'urgence envoyé à $number. Fenêtre de $timerMins min activée.")
         } else {
             Log.i("UrgentCallGuard", "Volume sonore suffisant ($volumePercent% > $threshold%). Pas d'action.")
         }

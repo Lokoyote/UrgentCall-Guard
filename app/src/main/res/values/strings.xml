@@ -32,13 +32,14 @@
 
     <string name="nav_settings_button">Réglages</string>
     <string name="nav_whitelist_button">Liste blanche</string>
+    <string name="nav_blacklist_button">Liste noire</string>
 
     <!-- Réglages -->
     <string name="settings_title">Réglages</string>
     <string name="settings_volume_threshold_label">Seuil de volume déclencheur (pourcentage)</string>
     <string name="settings_timer_label">Fenêtre de rappel prioritaire (minutes)</string>
     <string name="settings_sms_template_label">Message SMS d\'urgence (utilisez {TIMER} pour insérer le nombre de minutes)</string>
-    <string name="settings_immediate_whitelist_label">Franchissement immédiat pour la liste blanche</string>
+    <string name="settings_immediate_whitelist_label">Les contacts de la liste blanche déclencheront la sonnerie automatiquement</string>
     <string name="settings_system_favorites_label">Inclure les favoris du téléphone comme prioritaires</string>
     <string name="settings_save_button">Enregistrer</string>
     <string name="settings_saved_toast">Réglages enregistrés</string>
@@ -64,4 +65,22 @@
     <string name="contacts_empty_search">Aucun contact trouvé.</string>
     <string name="contacts_add_action">Ajouter</string>
     <string name="contacts_already_added">Ajouté ✓</string>
+
+    <!-- Liste noire -->
+    <string name="blacklist_title">Liste noire</string>
+    <string name="blacklist_block_hidden_label">Bloquer les numéros masqués / privés</string>
+    <string name="blacklist_block_unknown_label">Bloquer les numéros inconnus (hors répertoire)</string>
+    <string name="blacklist_manual_section">Numéros bloqués manuellement</string>
+    <string name="blacklist_empty">Aucun numéro bloqué manuellement.</string>
+    <string name="blacklist_add_title">Bloquer un numéro</string>
+    <string name="blacklist_label_hint">Nom ou raison (optionnel)</string>
+    <string name="blacklist_default_label">Numéro bloqué</string>
+    <string name="blacklist_add_button">Ajouter à la liste noire</string>
+
+    <!-- Don -->
+    <string name="donation_button">❤️ Soutenir le développeur</string>
+    <string name="donation_dialog_title">Faire un don</string>
+    <string name="donation_dialog_message">Merci de votre soutien ! Ouvrez Wero et envoyez votre don à :\n\n%1$s\n\n(Wero ne permet pas de pré-remplir automatiquement un destinataire depuis une autre application — vous devrez le saisir vous-même.)</string>
+    <string name="donation_open_wero">Ouvrir Wero</string>
+    <string name="donation_copy_contact">Copier le contact</string>
 </resources>

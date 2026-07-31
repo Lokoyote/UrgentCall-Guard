@@ -273,6 +273,7 @@
 
         <com.google.android.material.card.MaterialCardView
             style="@style/UrgentCard"
+            android:layout_marginBottom="12dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground">
@@ -301,6 +302,52 @@
                     android:textSize="20sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/UrgentCard"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:id="@+id/blacklistCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/nav_blacklist_button"
+                    android:textColor="@color/slate_900"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textColor="@color/indigo_600"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/donationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:text="@string/donation_button"
+            android:textColor="@color/indigo_600"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

@@ -1,13 +1,16 @@
 package com.urgentcall.guard
 
+import android.app.AlarmManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 
 class UrgentCallForegroundService : Service() {
@@ -67,6 +70,31 @@ class UrgentCallForegroundService : Service() {
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Si la surveillance doit rester active (glissement de la notification sur
+        // Android 14+, ou service tué par le système), on programme un redémarrage rapide.
+        if (PreferencesHelper.isServiceEnabled(this)) {
+            scheduleRestart()
+        }
+    }
+
+    private fun scheduleRestart() {
+        val restartIntent = Intent(this, ServiceRestartReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            restartIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setAndAllowWhileIdle(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 2000L,
+            pendingIntent
+        )
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

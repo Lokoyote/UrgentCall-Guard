@@ -84,6 +84,27 @@ object ContactsHelper {
         return results
     }
 
+    /** Vérifie si un numéro correspond à un contact enregistré (répertoire du téléphone). */
+    fun isNumberInContacts(context: Context, phoneNumber: String): Boolean {
+        val uri = android.net.Uri.withAppendedPath(
+            ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+            android.net.Uri.encode(phoneNumber)
+        )
+        return try {
+            context.contentResolver.query(
+                uri,
+                arrayOf(ContactsContract.PhoneLookup._ID),
+                null,
+                null,
+                null
+            )?.use { cursor -> cursor.moveToFirst() } ?: false
+        } catch (e: SecurityException) {
+            // Sans permission, on ne peut pas savoir : on considère le numéro comme connu
+            // par prudence, pour ne jamais bloquer un contact légitime par erreur.
+            true
+        }
+    }
+
     /** Vérifie si un numéro appartient à un contact favori du téléphone. */
     fun isSystemFavorite(context: Context, phoneNumber: String): Boolean {
         val target = normalize(phoneNumber)

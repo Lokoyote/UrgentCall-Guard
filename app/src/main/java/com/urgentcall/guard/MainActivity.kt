@@ -1,5 +1,7 @@
 package com.urgentcall.guard
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
@@ -12,6 +14,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         val settingsCard = findViewById<LinearLayout>(R.id.settingsCard)
         val whitelistCard = findViewById<LinearLayout>(R.id.whitelistCard)
+        val blacklistCard = findViewById<LinearLayout>(R.id.blacklistCard)
 
         serviceSwitch.isChecked = PreferencesHelper.isServiceEnabled(this)
         serviceSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -69,6 +73,9 @@ class MainActivity : AppCompatActivity() {
 
         settingsCard.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
         whitelistCard.setOnClickListener { startActivity(Intent(this, WhitelistActivity::class.java)) }
+        blacklistCard.setOnClickListener { startActivity(Intent(this, BlacklistActivity::class.java)) }
+
+        findViewById<TextView>(R.id.donationButton).setOnClickListener { showDonationDialog() }
 
         if (serviceSwitch.isChecked) startGuardService()
     }
@@ -76,6 +83,40 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshAll()
+    }
+
+    private fun showDonationDialog() {
+        val message = getString(R.string.donation_dialog_message, DonationConfig.WERO_CONTACT)
+        AlertDialog.Builder(this)
+            .setTitle(R.string.donation_dialog_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.donation_open_wero) { _, _ -> openWero() }
+            .setNeutralButton(R.string.donation_copy_contact) { _, _ -> copyDonationContact() }
+            .setNegativeButton(R.string.whitelist_cancel_button, null)
+            .show()
+    }
+
+    private fun openWero() {
+        val launchIntent = packageManager.getLaunchIntentForPackage(DonationConfig.WERO_PACKAGE)
+        if (launchIntent != null) {
+            startActivity(launchIntent)
+        } else {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${DonationConfig.WERO_PACKAGE}")))
+            } catch (e: Exception) {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=${DonationConfig.WERO_PACKAGE}")
+                    )
+                )
+            }
+        }
+    }
+
+    private fun copyDonationContact() {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText("Wero", DonationConfig.WERO_CONTACT))
     }
 
     private fun requestIgnoreBatteryOptimizations() {
