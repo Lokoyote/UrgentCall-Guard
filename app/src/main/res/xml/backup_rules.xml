@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include domain="sharedpref" path="urgentcall_settings_v1.xml" />
+    <include domain="sharedpref" path="urgentcall_whitelist_v1.xml" />
+    <include domain="sharedpref" path="urgentcall_blacklist_v1.xml" />
+</full-backup-content>

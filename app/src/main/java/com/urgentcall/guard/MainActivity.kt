@@ -25,12 +25,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var thresholdValue: TextView
     private lateinit var timerValue: TextView
     private lateinit var serviceSwitch: SwitchMaterial
-    private lateinit var allGrantedBanner: TextView
+    private lateinit var permissionsCard: com.google.android.material.card.MaterialCardView
     private lateinit var permissionsListContainer: LinearLayout
     private lateinit var requestPermsButton: MaterialButton
     private lateinit var requestDndButton: MaterialButton
     private lateinit var requestBatteryButton: MaterialButton
     private lateinit var donationButton: MaterialButton
+    private lateinit var howItWorksHeader: LinearLayout
+    private lateinit var howItWorksBody: TextView
+    private lateinit var howItWorksChevron: TextView
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -54,12 +57,22 @@ class MainActivity : AppCompatActivity() {
         thresholdValue = findViewById(R.id.thresholdValue)
         timerValue = findViewById(R.id.timerValue)
         serviceSwitch = findViewById(R.id.serviceSwitch)
-        allGrantedBanner = findViewById(R.id.allGrantedBanner)
+        permissionsCard = findViewById(R.id.permissionsCard)
         permissionsListContainer = findViewById(R.id.permissionsListContainer)
         requestPermsButton = findViewById(R.id.requestPermsButton)
         requestDndButton = findViewById(R.id.requestDndButton)
         requestBatteryButton = findViewById(R.id.requestBatteryButton)
         donationButton = findViewById(R.id.donationButton)
+        howItWorksHeader = findViewById(R.id.howItWorksHeader)
+        howItWorksBody = findViewById(R.id.howItWorksBody)
+        howItWorksChevron = findViewById(R.id.howItWorksChevron)
+
+        applyHowItWorksState(PreferencesHelper.isHowItWorksExpanded(this))
+        howItWorksHeader.setOnClickListener {
+            val newState = howItWorksBody.visibility != View.VISIBLE
+            PreferencesHelper.setHowItWorksExpanded(this, newState)
+            applyHowItWorksState(newState)
+        }
 
         val settingsCard = findViewById<LinearLayout>(R.id.settingsCard)
         val whitelistCard = findViewById<LinearLayout>(R.id.whitelistCard)
@@ -120,6 +133,11 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(volumeReceiver)
     }
 
+    private fun applyHowItWorksState(expanded: Boolean) {
+        howItWorksBody.visibility = if (expanded) View.VISIBLE else View.GONE
+        howItWorksChevron.text = getString(if (expanded) R.string.chevron_up else R.string.chevron_down)
+    }
+
     private fun requestIgnoreBatteryOptimizations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
@@ -153,8 +171,7 @@ class MainActivity : AppCompatActivity() {
         val statuses = PermissionStatusHelper.getAllStatuses(this)
         val allGranted = statuses.all { it.granted }
 
-        allGrantedBanner.visibility = if (allGranted) View.VISIBLE else View.GONE
-        permissionsListContainer.visibility = if (allGranted) View.GONE else View.VISIBLE
+        permissionsCard.visibility = if (allGranted) View.GONE else View.VISIBLE
 
         permissionsListContainer.removeAllViews()
         if (!allGranted) {

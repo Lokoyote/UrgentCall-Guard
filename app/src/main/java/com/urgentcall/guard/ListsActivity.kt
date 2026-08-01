@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
@@ -103,8 +104,9 @@ class ListsActivity : AppCompatActivity() {
 
     private fun showAddWhitelistDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_contact, null)
-        val nameInput = dialogView.findViewById<EditText>(R.id.dialogNameInput)
+        val nameInput = dialogView.findViewById<AutoCompleteTextView>(R.id.dialogNameInput)
         val phoneInput = dialogView.findViewById<EditText>(R.id.dialogPhoneInput)
+        setupContactAutocomplete(nameInput, phoneInput)
 
         AlertDialog.Builder(this)
             .setTitle(R.string.whitelist_add_title)
@@ -121,6 +123,16 @@ class ListsActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.whitelist_cancel_button, null)
             .show()
+    }
+
+    private fun setupContactAutocomplete(nameInput: AutoCompleteTextView, phoneInput: EditText) {
+        nameInput.setAdapter(ContactAutoCompleteAdapter(this))
+        nameInput.threshold = 1
+        nameInput.setOnItemClickListener { parent, _, position, _ ->
+            val selected = parent.getItemAtPosition(position) as ContactEntry
+            nameInput.setText(selected.name)
+            phoneInput.setText(selected.phoneNumber)
+        }
     }
 
     // ----------------------- Liste noire -----------------------
@@ -164,8 +176,9 @@ class ListsActivity : AppCompatActivity() {
 
     private fun showAddBlacklistDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_contact, null)
-        val nameInput = dialogView.findViewById<EditText>(R.id.dialogNameInput)
+        val nameInput = dialogView.findViewById<AutoCompleteTextView>(R.id.dialogNameInput)
         val phoneInput = dialogView.findViewById<EditText>(R.id.dialogPhoneInput)
+        setupContactAutocomplete(nameInput, phoneInput)
         nameInput.hint = getString(R.string.blacklist_label_hint)
 
         AlertDialog.Builder(this)

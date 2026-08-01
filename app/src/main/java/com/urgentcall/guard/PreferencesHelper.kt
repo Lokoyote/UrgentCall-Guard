@@ -17,6 +17,7 @@ object PreferencesHelper {
     private const val KEY_IMMEDIATE_WHITELIST = "immediateWhitelistBreakthrough"
     private const val KEY_ALLOW_SYSTEM_FAVORITES = "allowSystemFavorites"
     private const val KEY_AUTO_RESTORE_DELAY = "autoRestoreDelayAfterCallSec"
+    private const val KEY_HOW_IT_WORKS_EXPANDED = "howItWorksExpanded"
 
     private const val DEFAULT_SMS_TEMPLATE =
         "[UrgentCall Guard] Mon telephone est en mode silencieux. S'il s'agit d'une URGENCE, rappelez-moi dans les {TIMER} min pour faire sonner mon telephone a volume MAX."
@@ -68,4 +69,11 @@ object PreferencesHelper {
 
     fun getAutoRestoreDelaySec(context: Context): Int =
         prefs(context).getInt(KEY_AUTO_RESTORE_DELAY, 3)
+
+    fun isHowItWorksExpanded(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_HOW_IT_WORKS_EXPANDED, true)
+
+    fun setHowItWorksExpanded(context: Context, expanded: Boolean) {
+        prefs(context).edit().putBoolean(KEY_HOW_IT_WORKS_EXPANDED, expanded).apply()
+    }
 }

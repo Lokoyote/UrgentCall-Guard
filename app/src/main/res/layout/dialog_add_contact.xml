@@ -5,11 +5,12 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/dialogNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
+        android:completionThreshold="1"
         android:hint="@string/whitelist_name_hint"
         android:inputType="textPersonName" />
 

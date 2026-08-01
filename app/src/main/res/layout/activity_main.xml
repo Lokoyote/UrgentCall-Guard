@@ -43,16 +43,38 @@
                 android:orientation="vertical"
                 android:padding="18dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/howItWorksHeader"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
-                    android:text="@string/how_it_works_title"
-                    android:textColor="@color/indigo_700"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/how_it_works_title"
+                        android:textColor="@color/indigo_700"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/howItWorksChevron"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/chevron_up"
+                        android:textColor="@color/indigo_700"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
+                    android:id="@+id/howItWorksBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/how_it_works_body"
@@ -200,6 +222,7 @@
 
         <!-- Carte autorisations -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/permissionsCard"
             style="@style/UrgentCard"
             android:layout_marginBottom="16dp">
 
@@ -243,22 +266,6 @@
                         android:textSize="12sp"
                         android:lineSpacingExtra="1dp" />
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/allGrantedBanner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:background="@drawable/bg_pill_success"
-                    android:paddingStart="14dp"
-                    android:paddingTop="8dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="8dp"
-                    android:text="@string/permissions_all_granted"
-                    android:textColor="@color/emerald_600"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/permissionsListContainer"

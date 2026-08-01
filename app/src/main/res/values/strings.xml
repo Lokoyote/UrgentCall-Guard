@@ -5,7 +5,7 @@
     <string name="notif_title_monitoring">UrgentCall Guard</string>
     <string name="notif_text_monitoring">Volume normal — vos appels sonneront normalement.</string>
     <string name="notif_title_low_volume">Volume faible détecté</string>
-    <string name="notif_text_low_volume">UrgentCall Guard prend en charge vos appels : un appel manqué déclenchera un rappel à volume maximal.</string>
+    <string name="notif_text_low_volume">UrgentCall Guard prend en charge vos appels.</string>
 
     <string name="app_subtitle">Mode silencieux &amp; appels urgents</string>
     <string name="service_switch_label">Activer la surveillance</string>
@@ -16,6 +16,8 @@
 
     <string name="how_it_works_title">Comment ça marche ?</string>
     <string name="how_it_works_body">Quand votre téléphone est en silencieux ou à faible volume, UrgentCall Guard surveille les appels manqués. Si l\'appelant n\'est ni dans la liste blanche ni dans la liste noire, un SMS automatique lui explique qu\'un rappel dans les minutes qui suivent fera sonner votre téléphone à volume maximal, même en silencieux. Cela vous garde joignable en cas d\'urgence, sans sonner en permanence pour le reste.</string>
+    <string name="chevron_up">▲</string>
+    <string name="chevron_down">▼</string>
 
     <string name="summary_title">Résumé</string>
     <string name="summary_current_volume">Volume actuel</string>
@@ -25,7 +27,6 @@
     <string name="permissions_title">État des autorisations</string>
     <string name="privacy_notice_title">🔒 Aucune information n\'est partagée</string>
     <string name="privacy_notice_body">Tout le traitement (numéros, SMS, contacts) reste sur votre téléphone : rien n\'est envoyé à un serveur ni à un tiers. Ces autorisations sont nécessaires pour détecter l\'appel entrant (téléphone), identifier l\'appelant (contacts / journal d\'appels), envoyer le SMS de rappel (SMS) et ajuster le volume au bon moment (Ne pas déranger).</string>
-    <string name="permissions_all_granted">✅ Toutes les autorisations sont accordées</string>
     <string name="permission_granted_state">Autorisé</string>
     <string name="permission_missing_state">Manquant</string>
 
