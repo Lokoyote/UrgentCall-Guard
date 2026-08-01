@@ -67,9 +67,12 @@ class MainActivity : AppCompatActivity() {
 
         serviceSwitch.isChecked = PreferencesHelper.isServiceEnabled(this)
         serviceSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Rien d'autre à faire ici : CallBroadcastReceiver relit ce réglage
-            // à chaque appel entrant. Aucun service permanent à démarrer/arrêter.
             PreferencesHelper.setServiceEnabled(this, isChecked)
+            if (isChecked) {
+                UrgentCallForegroundService.start(this)
+            } else {
+                UrgentCallForegroundService.stop(this)
+            }
         }
 
         requestPermsButton.setOnClickListener {
@@ -85,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         donationButton.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/AdrienCUFFARO")))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/lokoyote")))
         }
 
         settingsCard.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
@@ -94,6 +97,10 @@ class MainActivity : AppCompatActivity() {
         }
         blacklistCard.setOnClickListener {
             startActivity(Intent(this, ListsActivity::class.java).putExtra(ListsActivity.EXTRA_INITIAL_TAB, ListsActivity.TAB_BLACKLIST))
+        }
+
+        if (serviceSwitch.isChecked) {
+            UrgentCallForegroundService.start(this)
         }
     }
 

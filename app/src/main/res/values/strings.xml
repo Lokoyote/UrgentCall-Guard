@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">UrgentCall Guard</string>
     <string name="notif_channel_name">Service de Surveillance UrgentCall Guard</string>
-    <string name="notif_channel_desc">Affichée uniquement pendant une fenêtre de rappel d\'urgence en cours</string>
-    <string name="notif_title">Volume faible détecté</string>
-    <string name="notif_text_format">UrgentCall Guard prend en charge cet appel : un rappel sonnera à volume maximal.</string>
+    <string name="notif_channel_desc">Reste affichée en continu, discrètement, pour surveiller vos appels</string>
+    <string name="notif_title_monitoring">UrgentCall Guard</string>
+    <string name="notif_text_monitoring">Volume normal — vos appels sonneront normalement.</string>
+    <string name="notif_title_low_volume">Volume faible détecté</string>
+    <string name="notif_text_low_volume">UrgentCall Guard prend en charge vos appels : un appel manqué déclenchera un rappel à volume maximal.</string>
 
     <string name="app_subtitle">Mode silencieux &amp; appels urgents</string>
     <string name="service_switch_label">Activer la surveillance</string>

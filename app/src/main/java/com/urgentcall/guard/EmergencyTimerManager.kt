@@ -40,10 +40,6 @@ object EmergencyTimerManager {
         val expiresAt = System.currentTimeMillis() + timerMinutes * 60_000L
         activeWindows.add(ActiveWindow(normalized, expiresAt))
 
-        // Service éphémère : maintient le process en vie le temps de la fenêtre
-        // pour garantir que le restore différé s'exécute, puis s'arrête seul.
-        UrgentCallForegroundService.start(appContext)
-
         val token = Any()
         pendingTokens[normalized] = token
         handler.postDelayed({
@@ -51,7 +47,7 @@ object EmergencyTimerManager {
                 activeWindows.removeAll { it.phoneNumber == normalized }
                 pendingTokens.remove(normalized)
                 AudioManagerHelper.restoreInitialAudioSettings(appContext)
-                stopServiceIfNoWindowsLeft(appContext)
+                UrgentCallForegroundService.refreshNotification(appContext)
             }
         }, timerMinutes * 60_000L)
     }
@@ -68,18 +64,12 @@ object EmergencyTimerManager {
         val normalized = normalize(phoneNumber)
         cancelPending(normalized)
         activeWindows.removeAll { it.phoneNumber == normalized }
-        stopServiceIfNoWindowsLeft(context.applicationContext)
+        UrgentCallForegroundService.refreshNotification(context.applicationContext)
     }
 
     private fun cancelPending(normalized: String) {
         // Invalide le token : le Runnable déjà en file dans le Handler se
         // reconnaîtra périmé à l'exécution et ne fera rien (pas de double restore).
         pendingTokens.remove(normalized)
-    }
-
-    private fun stopServiceIfNoWindowsLeft(context: Context) {
-        if (activeWindows.isEmpty()) {
-            UrgentCallForegroundService.stop(context)
-        }
     }
 }

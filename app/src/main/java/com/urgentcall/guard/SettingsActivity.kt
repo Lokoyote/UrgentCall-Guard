@@ -65,6 +65,9 @@ class SettingsActivity : AppCompatActivity() {
         PreferencesHelper.setImmediateWhitelistBreakthrough(this, immediateWhitelist)
         PreferencesHelper.setAllowSystemFavorites(this, systemFavorites)
 
+        // Met à jour immédiatement la notification permanente (nouveau seuil pris en compte)
+        UrgentCallForegroundService.refreshNotification(this)
+
         Toast.makeText(this, R.string.settings_saved_toast, Toast.LENGTH_SHORT).show()
         finish()
     }
