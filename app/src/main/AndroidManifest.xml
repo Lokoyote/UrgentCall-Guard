@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
@@ -38,9 +37,9 @@
             android:theme="@style/Theme.UrgentCallGuard" />
 
         <activity
-            android:name=".WhitelistActivity"
+            android:name=".ListsActivity"
             android:exported="false"
-            android:label="@string/whitelist_title"
+            android:label="@string/lists_title"
             android:theme="@style/Theme.UrgentCallGuard" />
 
         <activity
@@ -49,13 +48,9 @@
             android:label="@string/contacts_picker_title"
             android:theme="@style/Theme.UrgentCallGuard" />
 
-        <activity
-            android:name=".BlacklistActivity"
-            android:exported="false"
-            android:label="@string/blacklist_title"
-            android:theme="@style/Theme.UrgentCallGuard" />
-
-        <!-- Notification Permanente Foreground Service -->
+        <!-- Service ponctuel : actif uniquement pendant une fenêtre de rappel
+             d'urgence après un appel manqué. Jamais démarré au boot,
+             jamais relancé automatiquement (voir UrgentCallForegroundService). -->
         <service
             android:name=".UrgentCallForegroundService"
             android:enabled="true"
@@ -66,7 +61,12 @@
                 android:value="Urgent Call and Silent Mode Monitoring" />
         </service>
 
-        <!-- BroadcastReceiver pour écouter les états d'appel -->
+        <!-- BroadcastReceiver pour écouter les états d'appel : c'est le seul
+             point d'entrée de l'app en arrière-plan. PHONE_STATE est un
+             broadcast protégé par permission système (READ_PHONE_STATE),
+             donc Android continue de le délivrer à ce receiver déclaré dans
+             le manifeste même si le process de l'app a été tué entre-temps :
+             aucun service permanent n'est nécessaire pour détecter un appel. -->
         <receiver
             android:name=".CallBroadcastReceiver"
             android:enabled="true"
@@ -75,22 +75,6 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-
-        <!-- Redémarre le service au boot si activé par l'utilisateur -->
-        <receiver
-            android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Relance le service si sa notification est glissée (Android 14+) ou tué par le système -->
-        <receiver
-            android:name=".ServiceRestartReceiver"
-            android:enabled="true"
-            android:exported="false" />
 
     </application>
 

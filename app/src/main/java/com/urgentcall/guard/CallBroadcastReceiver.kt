@@ -43,6 +43,10 @@ class CallBroadcastReceiver : BroadcastReceiver() {
                 if (!isBlocked && number != null && EmergencyTimerManager.isUrgentRecallWindowActive(number)) {
                     // Rappel dans la fenêtre d'urgence -> FORCE le volume max
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
+                    // Le rappel attendu vient d'arriver : on ferme la fenêtre tout de
+                    // suite (annule le restore différé encore en attente et arrête
+                    // le service éphémère si plus aucune fenêtre n'est active).
+                    EmergencyTimerManager.clearWindow(context, number)
                 } else if (!isBlocked && number != null && WhitelistHelper.isWhitelistedAndImmediate(context, number)) {
                     // Contact prioritaire (liste blanche manuelle) -> franchissement immédiat
                     AudioManagerHelper.forceMaxVolumeRingtone(context)

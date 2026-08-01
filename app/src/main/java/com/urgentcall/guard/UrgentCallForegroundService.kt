@@ -1,6 +1,5 @@
 package com.urgentcall.guard
 
-import android.app.AlarmManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,29 +9,29 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 
+/**
+ * Service PONCTUEL, actif uniquement pendant une fenêtre de rappel d'urgence
+ * (entre un appel manqué et sa fin de fenêtre / son rappel). Il n'est jamais
+ * lancé au démarrage du téléphone ni maintenu en permanence : il est démarré
+ * par EmergencyTimerManager.startRecallTimer() et stoppé par lui dès que la
+ * fenêtre se ferme, pour garantir que l'app n'est active que le temps
+ * nécessaire autour d'un véritable appel entrant.
+ */
 class UrgentCallForegroundService : Service() {
 
     companion object {
         const val CHANNEL_ID = "urgent_call_guard_foreground"
         const val NOTIFICATION_ID = 1001
 
-        /** Met à jour le texte de la notification (ex: après modification des réglages). */
-        fun refreshNotification(context: Context) {
-            if (!PreferencesHelper.isServiceEnabled(context)) return
-            val threshold = PreferencesHelper.getVolumeThreshold(context)
-            val timerMinutes = PreferencesHelper.getTimerMinutes(context)
-            val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(context.getString(R.string.notif_title))
-                .setContentText(context.getString(R.string.notif_text_format, threshold, timerMinutes))
-                .setSmallIcon(R.drawable.ic_shield)
-                .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .build()
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.notify(NOTIFICATION_ID, notification)
+        fun start(context: Context) {
+            ContextCompat.startForegroundService(context, Intent(context, UrgentCallForegroundService::class.java))
+        }
+
+        fun stop(context: Context) {
+            context.stopService(Intent(context, UrgentCallForegroundService::class.java))
         }
     }
 
@@ -43,18 +42,29 @@ class UrgentCallForegroundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(NOTIFICATION_ID, createNotification())
-        return START_STICKY
+        // Pas de START_STICKY : ce service ne doit PAS être relancé automatiquement
+        // par le système. Sa durée de vie est entièrement pilotée par
+        // EmergencyTimerManager (fenêtre de rappel ouverte/fermée).
+        return START_NOT_STICKY
     }
 
     private fun createNotification(): Notification {
-        val threshold = PreferencesHelper.getVolumeThreshold(this)
-        val timerMinutes = PreferencesHelper.getTimerMinutes(this)
+        val openAppIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        val contentIntent = PendingIntent.getActivity(
+            this,
+            0,
+            openAppIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_text_format, threshold, timerMinutes))
+            .setContentText(getString(R.string.notif_text_format))
             .setSmallIcon(R.drawable.ic_shield)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentIntent(contentIntent)
             .build()
     }
 
@@ -70,31 +80,6 @@ class UrgentCallForegroundService : Service() {
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // Si la surveillance doit rester active (glissement de la notification sur
-        // Android 14+, ou service tué par le système), on programme un redémarrage rapide.
-        if (PreferencesHelper.isServiceEnabled(this)) {
-            scheduleRestart()
-        }
-    }
-
-    private fun scheduleRestart() {
-        val restartIntent = Intent(this, ServiceRestartReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            restartIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setAndAllowWhileIdle(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 2000L,
-            pendingIntent
-        )
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

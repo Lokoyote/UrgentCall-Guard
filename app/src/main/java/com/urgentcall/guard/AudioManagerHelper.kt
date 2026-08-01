@@ -57,8 +57,9 @@ object AudioManagerHelper {
     }
 
     fun scheduleAudioSettingsRestore(context: Context, delaySec: Int = 3) {
+        val appContext = context.applicationContext
         Handler(Looper.getMainLooper()).postDelayed({
-            restoreInitialAudioSettings(context)
+            restoreInitialAudioSettings(appContext)
         }, delaySec * 1000L)
     }
 }

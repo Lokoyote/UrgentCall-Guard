@@ -30,6 +30,38 @@
             android:textColor="@color/slate_500"
             android:textSize="14sp" />
 
+        <!-- Carte explication du fonctionnement -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/UrgentCard"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/indigo_50"
+            app:strokeColor="@color/indigo_100">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/how_it_works_title"
+                    android:textColor="@color/indigo_700"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/how_it_works_body"
+                    android:textColor="@color/slate_700"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Carte résumé -->
         <com.google.android.material.card.MaterialCardView
             style="@style/UrgentCard"
@@ -186,6 +218,32 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/emerald_50"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="14dp"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/privacy_notice_title"
+                        android:textColor="@color/emerald_600"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/privacy_notice_body"
+                        android:textColor="@color/slate_700"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="1dp" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/allGrantedBanner"
                     android:layout_width="wrap_content"
@@ -334,20 +392,44 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/donationButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="8dp"
-            android:text="@string/donation_button"
-            android:textColor="@color/indigo_600"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+        <!-- Carte don -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/UrgentCard"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/donation_title"
+                    android:textColor="@color/slate_900"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:text="@string/donation_body"
+                    android:textColor="@color/slate_500"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/donationButton"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/indigo_600"
+                    android:text="@string/donation_button" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

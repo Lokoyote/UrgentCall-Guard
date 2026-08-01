@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">UrgentCall Guard</string>
     <string name="notif_channel_name">Service de Surveillance UrgentCall Guard</string>
-    <string name="notif_channel_desc">Maintient l\'application active pour capturer les appels d\'urgence</string>
-    <string name="notif_title">UrgentCall Guard • Actif</string>
-    <string name="notif_text_format">Seuil %1$d%% • Fenêtre de rappel %2$d min</string>
+    <string name="notif_channel_desc">Affichée uniquement pendant une fenêtre de rappel d\'urgence en cours</string>
+    <string name="notif_title">Volume faible détecté</string>
+    <string name="notif_text_format">UrgentCall Guard prend en charge cet appel : un rappel sonnera à volume maximal.</string>
 
     <string name="app_subtitle">Mode silencieux &amp; appels urgents</string>
     <string name="service_switch_label">Activer la surveillance</string>
@@ -12,12 +12,17 @@
     <string name="request_dnd_button">Autoriser l\'accès Ne pas déranger</string>
     <string name="request_battery_button">Désactiver l\'optimisation de batterie</string>
 
+    <string name="how_it_works_title">Comment ça marche ?</string>
+    <string name="how_it_works_body">Quand votre téléphone est en silencieux ou à faible volume, UrgentCall Guard surveille les appels manqués. Si l\'appelant n\'est ni dans la liste blanche ni dans la liste noire, un SMS automatique lui explique qu\'un rappel dans les minutes qui suivent fera sonner votre téléphone à volume maximal, même en silencieux. Cela vous garde joignable en cas d\'urgence, sans sonner en permanence pour le reste.</string>
+
     <string name="summary_title">Résumé</string>
     <string name="summary_current_volume">Volume actuel</string>
     <string name="summary_threshold">Seuil configuré</string>
     <string name="summary_timer">Fenêtre (min)</string>
 
     <string name="permissions_title">État des autorisations</string>
+    <string name="privacy_notice_title">🔒 Aucune information n\'est partagée</string>
+    <string name="privacy_notice_body">Tout le traitement (numéros, SMS, contacts) reste sur votre téléphone : rien n\'est envoyé à un serveur ni à un tiers. Ces autorisations sont nécessaires pour détecter l\'appel entrant (téléphone), identifier l\'appelant (contacts / journal d\'appels), envoyer le SMS de rappel (SMS) et ajuster le volume au bon moment (Ne pas déranger).</string>
     <string name="permissions_all_granted">✅ Toutes les autorisations sont accordées</string>
     <string name="permission_granted_state">Autorisé</string>
     <string name="permission_missing_state">Manquant</string>
@@ -33,6 +38,11 @@
     <string name="nav_settings_button">Réglages</string>
     <string name="nav_whitelist_button">Liste blanche</string>
     <string name="nav_blacklist_button">Liste noire</string>
+    <string name="lists_title">Listes blanche &amp; noire</string>
+
+    <string name="donation_title">UrgentCall Guard vous est utile ?</string>
+    <string name="donation_body">L\'app restera toujours gratuite. Si elle vous rend\nservice, un petit don aide à financer son\ndéveloppement.</string>
+    <string name="donation_button">Faire un don via PayPal</string>
 
     <!-- Réglages -->
     <string name="settings_title">Réglages</string>
@@ -68,19 +78,12 @@
 
     <!-- Liste noire -->
     <string name="blacklist_title">Liste noire</string>
-    <string name="blacklist_block_hidden_label">Bloquer les numéros masqués / privés</string>
-    <string name="blacklist_block_unknown_label">Bloquer les numéros inconnus (hors répertoire)</string>
-    <string name="blacklist_manual_section">Numéros bloqués manuellement</string>
-    <string name="blacklist_empty">Aucun numéro bloqué manuellement.</string>
-    <string name="blacklist_add_title">Bloquer un numéro</string>
+    <string name="blacklist_block_hidden_label">Ignorer les numéros masqués / privés</string>
+    <string name="blacklist_block_unknown_label">Ignorer les numéros inconnus (hors répertoire)</string>
+    <string name="blacklist_manual_section">Numéros ignorés manuellement</string>
+    <string name="blacklist_empty">Aucun numéro ignoré manuellement.</string>
+    <string name="blacklist_add_title">Ignorer un numéro</string>
     <string name="blacklist_label_hint">Nom ou raison (optionnel)</string>
-    <string name="blacklist_default_label">Numéro bloqué</string>
-    <string name="blacklist_add_button">Ajouter à la liste noire</string>
-
-    <!-- Don -->
-    <string name="donation_button">❤️ Soutenir le développeur</string>
-    <string name="donation_dialog_title">Faire un don</string>
-    <string name="donation_dialog_message">Merci de votre soutien ! Ouvrez Wero et envoyez votre don à :\n\n%1$s\n\n(Wero ne permet pas de pré-remplir automatiquement un destinataire depuis une autre application — vous devrez le saisir vous-même.)</string>
-    <string name="donation_open_wero">Ouvrir Wero</string>
-    <string name="donation_copy_contact">Copier le contact</string>
+    <string name="blacklist_default_label">Numéro ignoré</string>
+    <string name="blacklist_add_button">Ajouter à la liste des numéros ignorés</string>
 </resources>

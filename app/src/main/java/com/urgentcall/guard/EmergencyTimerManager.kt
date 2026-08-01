@@ -15,6 +15,11 @@ object EmergencyTimerManager {
     private val activeWindows = mutableListOf<ActiveWindow>()
     private val handler = Handler(Looper.getMainLooper())
 
+    // Un token de Runnable par numéro, pour pouvoir annuler proprement le
+    // restore programmé quand la fenêtre est fermée avant son expiration
+    // (rappel réussi), au lieu de laisser le Runnable s'exécuter pour rien.
+    private val pendingTokens = mutableMapOf<String, Any>()
+
     private fun normalize(number: String): String = number.filter { it.isDigit() }.takeLast(9)
 
     fun startRecallTimer(
@@ -24,17 +29,29 @@ object EmergencyTimerManager {
         previousRingerMode: Int,
         previousVolumePercent: Int
     ) {
+        // On capture toujours l'applicationContext : ce Runnable peut vivre
+        // jusqu'à timerMinutes (potentiellement plusieurs centaines de minutes),
+        // il ne doit jamais retenir un Context plus court-vécu que l'app elle-même.
+        val appContext = context.applicationContext
         val normalized = normalize(phoneNumber)
+
+        cancelPending(normalized)
         activeWindows.removeAll { it.phoneNumber == normalized }
         val expiresAt = System.currentTimeMillis() + timerMinutes * 60_000L
         activeWindows.add(ActiveWindow(normalized, expiresAt))
 
+        // Service éphémère : maintient le process en vie le temps de la fenêtre
+        // pour garantir que le restore différé s'exécute, puis s'arrête seul.
+        UrgentCallForegroundService.start(appContext)
+
+        val token = Any()
+        pendingTokens[normalized] = token
         handler.postDelayed({
-            // Si personne n'a rappelé avant expiration, on nettoie et on restaure l'état initial.
-            val stillActive = activeWindows.any { it.phoneNumber == normalized && it.expiresAtMs <= System.currentTimeMillis() + 500 }
-            if (stillActive) {
+            if (pendingTokens[normalized] === token) {
                 activeWindows.removeAll { it.phoneNumber == normalized }
-                AudioManagerHelper.restoreInitialAudioSettings(context)
+                pendingTokens.remove(normalized)
+                AudioManagerHelper.restoreInitialAudioSettings(appContext)
+                stopServiceIfNoWindowsLeft(appContext)
             }
         }, timerMinutes * 60_000L)
     }
@@ -46,8 +63,23 @@ object EmergencyTimerManager {
         return activeWindows.any { it.phoneNumber == normalized }
     }
 
-    fun clearWindow(phoneNumber: String) {
+    /** Ferme la fenêtre immédiatement (rappel traité) et annule le restore différé en attente. */
+    fun clearWindow(context: Context, phoneNumber: String) {
         val normalized = normalize(phoneNumber)
+        cancelPending(normalized)
         activeWindows.removeAll { it.phoneNumber == normalized }
+        stopServiceIfNoWindowsLeft(context.applicationContext)
+    }
+
+    private fun cancelPending(normalized: String) {
+        // Invalide le token : le Runnable déjà en file dans le Handler se
+        // reconnaîtra périmé à l'exécution et ne fera rien (pas de double restore).
+        pendingTokens.remove(normalized)
+    }
+
+    private fun stopServiceIfNoWindowsLeft(context: Context) {
+        if (activeWindows.isEmpty()) {
+            UrgentCallForegroundService.stop(context)
+        }
     }
 }
