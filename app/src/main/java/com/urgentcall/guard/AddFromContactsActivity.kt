@@ -12,11 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 
 class AddFromContactsActivity : AppCompatActivity() {
 
+    companion object {
+        const val EXTRA_TARGET = "target"
+        const val TARGET_WHITELIST = "whitelist"
+        const val TARGET_BLACKLIST = "blacklist"
+    }
+
     private lateinit var searchInput: EditText
     private lateinit var sectionTitle: TextView
     private lateinit var emptyText: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ContactPickerAdapter
+    private var target: String = TARGET_WHITELIST
 
     private fun normalize(number: String): String = number.filter { it.isDigit() }.takeLast(9)
 
@@ -25,13 +32,19 @@ class AddFromContactsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_from_contacts)
         title = getString(R.string.contacts_picker_title)
 
+        target = intent.getStringExtra(EXTRA_TARGET) ?: TARGET_WHITELIST
+
         searchInput = findViewById(R.id.searchInput)
         sectionTitle = findViewById(R.id.sectionTitle)
         emptyText = findViewById(R.id.emptyText)
         recyclerView = findViewById(R.id.contactsRecyclerView)
 
         adapter = ContactPickerAdapter(emptyList(), emptySet()) { contact ->
-            WhitelistHelper.addContact(this, WhitelistContact(contact.name, contact.phoneNumber, isPriority = true))
+            if (target == TARGET_BLACKLIST) {
+                BlacklistHelper.addEntry(this, BlacklistEntry(contact.name, contact.phoneNumber))
+            } else {
+                WhitelistHelper.addContact(this, WhitelistContact(contact.name, contact.phoneNumber, isPriority = true))
+            }
             loadFavorites()
         }
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -49,8 +62,12 @@ class AddFromContactsActivity : AppCompatActivity() {
         loadFavorites()
     }
 
-    private fun currentWhitelistKeys(): Set<String> =
-        WhitelistHelper.getContacts(this).map { normalize(it.phoneNumber) }.toSet()
+    private fun currentTargetKeys(): Set<String> =
+        if (target == TARGET_BLACKLIST) {
+            BlacklistHelper.getEntries(this).map { normalize(it.phoneNumber) }.toSet()
+        } else {
+            WhitelistHelper.getContacts(this).map { normalize(it.phoneNumber) }.toSet()
+        }
 
     private fun loadFavorites() {
         sectionTitle.text = getString(R.string.contacts_favorites_section)
@@ -65,7 +82,7 @@ class AddFromContactsActivity : AppCompatActivity() {
     }
 
     private fun showResults(contacts: List<ContactEntry>, emptyMessage: String) {
-        adapter.updateData(contacts, currentWhitelistKeys())
+        adapter.updateData(contacts, currentTargetKeys())
         emptyText.text = emptyMessage
         emptyText.visibility = if (contacts.isEmpty()) View.VISIBLE else View.GONE
         recyclerView.visibility = if (contacts.isEmpty()) View.GONE else View.VISIBLE

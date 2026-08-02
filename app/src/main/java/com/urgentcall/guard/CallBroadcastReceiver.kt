@@ -38,6 +38,14 @@ class CallBroadcastReceiver : BroadcastReceiver() {
             TelephonyManager.CALL_STATE_RINGING -> {
                 incomingNumber = number
 
+                if (number != null && EmergencyNumbersHelper.isEmergencyNumber(context, number)) {
+                    // Numéro d'urgence : franchissement systématique, même si (par erreur)
+                    // le numéro était en liste noire. Priorité absolue, aucune exception.
+                    AudioManagerHelper.forceMaxVolumeRingtone(context)
+                    lastState = state
+                    return
+                }
+
                 val isBlocked = number != null && BlacklistHelper.isBlacklisted(context, number)
 
                 if (!isBlocked && number != null && EmergencyTimerManager.isUrgentRecallWindowActive(number)) {
@@ -78,6 +86,12 @@ class CallBroadcastReceiver : BroadcastReceiver() {
     }
 
     private fun handleMissedCall(context: Context, phoneNumber: String?) {
+        // 0) Numéro d'urgence : jamais de SMS automatique (déjà géré en priorité à la sonnerie)
+        if (phoneNumber != null && EmergencyNumbersHelper.isEmergencyNumber(context, phoneNumber)) {
+            Log.i("UrgentCallGuard", "Numéro $phoneNumber d'urgence : pas de SMS automatique.")
+            return
+        }
+
         // 1) Numéro masqué / privé (pas de numéro exploitable)
         if (BlacklistHelper.isHiddenNumber(phoneNumber)) {
             if (BlacklistHelper.isBlockHiddenNumbers(context)) {

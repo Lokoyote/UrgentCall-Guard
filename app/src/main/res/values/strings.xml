@@ -42,6 +42,7 @@
     <string name="nav_whitelist_button">Liste blanche</string>
     <string name="nav_blacklist_button">Liste noire</string>
     <string name="lists_title">Listes blanche &amp; noire</string>
+    <string name="emergency_numbers_notice">🚨 Les numéros d\'urgence (112, 15, 17, 18, police, pompiers, SAMU…) franchissent toujours le silencieux automatiquement. Inutile de les ajouter ici.</string>
 
     <string name="donation_title">UrgentCall Guard vous est utile ?</string>
     <string name="donation_body">L\'app restera toujours gratuite. Si elle vous rend\nservice, un petit don aide à financer son\ndéveloppement.</string>

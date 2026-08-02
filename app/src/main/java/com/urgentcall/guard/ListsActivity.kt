@@ -2,6 +2,8 @@ package com.urgentcall.guard
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AutoCompleteTextView
@@ -65,7 +67,9 @@ class ListsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // Rafraîchit au retour de l'écran "Ajouter depuis les contacts"
+        // (qui peut avoir ajouté à la liste blanche ou à la liste noire)
         refreshWhitelist()
+        refreshBlacklist()
     }
 
     private fun showTab(position: Int) {
@@ -91,7 +95,10 @@ class ListsActivity : AppCompatActivity() {
 
         addButton.setOnClickListener { showAddWhitelistDialog() }
         addFromContactsButton.setOnClickListener {
-            startActivity(Intent(this, AddFromContactsActivity::class.java))
+            startActivity(
+                Intent(this, AddFromContactsActivity::class.java)
+                    .putExtra(AddFromContactsActivity.EXTRA_TARGET, AddFromContactsActivity.TARGET_WHITELIST)
+            )
         }
     }
 
@@ -108,7 +115,7 @@ class ListsActivity : AppCompatActivity() {
         val phoneInput = dialogView.findViewById<EditText>(R.id.dialogPhoneInput)
         setupContactAutocomplete(nameInput, phoneInput)
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.whitelist_add_title)
             .setView(dialogView)
             .setPositiveButton(R.string.whitelist_add_button) { _, _ ->
@@ -122,7 +129,9 @@ class ListsActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton(R.string.whitelist_cancel_button, null)
-            .show()
+            .create()
+        bindConfirmEnabledOnPhoneFilled(dialog, phoneInput)
+        dialog.show()
     }
 
     private fun setupContactAutocomplete(nameInput: AutoCompleteTextView, phoneInput: EditText) {
@@ -144,6 +153,7 @@ class ListsActivity : AppCompatActivity() {
         blockHiddenSwitch = findViewById(R.id.blockHiddenSwitch)
         blockUnknownSwitch = findViewById(R.id.blockUnknownSwitch)
         val addButton = findViewById<MaterialButton>(R.id.blacklistAddButton)
+        val addFromContactsButton = findViewById<MaterialButton>(R.id.blacklistAddFromContactsButton)
 
         blockHiddenSwitch.isChecked = BlacklistHelper.isBlockHiddenNumbers(this)
         blockHiddenSwitch.setOnCheckedChangeListener { _, checked ->
@@ -163,6 +173,12 @@ class ListsActivity : AppCompatActivity() {
         blacklistRecyclerView.adapter = blacklistAdapter
 
         addButton.setOnClickListener { showAddBlacklistDialog() }
+        addFromContactsButton.setOnClickListener {
+            startActivity(
+                Intent(this, AddFromContactsActivity::class.java)
+                    .putExtra(AddFromContactsActivity.EXTRA_TARGET, AddFromContactsActivity.TARGET_BLACKLIST)
+            )
+        }
 
         refreshBlacklist()
     }
@@ -181,7 +197,7 @@ class ListsActivity : AppCompatActivity() {
         setupContactAutocomplete(nameInput, phoneInput)
         nameInput.hint = getString(R.string.blacklist_label_hint)
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.blacklist_add_title)
             .setView(dialogView)
             .setPositiveButton(R.string.blacklist_add_button) { _, _ ->
@@ -195,6 +211,23 @@ class ListsActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton(R.string.whitelist_cancel_button, null)
-            .show()
+            .create()
+        bindConfirmEnabledOnPhoneFilled(dialog, phoneInput)
+        dialog.show()
+    }
+
+    /** Désactive le bouton "Ajouter" tant que le champ numéro est vide. */
+    private fun bindConfirmEnabledOnPhoneFilled(dialog: AlertDialog, phoneInput: EditText) {
+        dialog.setOnShowListener {
+            val confirmButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            confirmButton.isEnabled = phoneInput.text.toString().isNotBlank()
+            phoneInput.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    confirmButton.isEnabled = s?.toString()?.isNotBlank() == true
+                }
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
     }
 }
