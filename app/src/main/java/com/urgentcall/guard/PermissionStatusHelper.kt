@@ -22,7 +22,6 @@ object PermissionStatusHelper {
     /** Permissions runtime standard requises (hors accès spéciaux). */
     fun runtimePermissions(): Array<String> = buildList {
         add(android.Manifest.permission.READ_PHONE_STATE)
-        add(android.Manifest.permission.READ_CALL_LOG)
         add(android.Manifest.permission.SEND_SMS)
         add(android.Manifest.permission.READ_CONTACTS)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -32,7 +31,6 @@ object PermissionStatusHelper {
 
     private fun label(context: Context, permission: String): String = when (permission) {
         android.Manifest.permission.READ_PHONE_STATE -> context.getString(R.string.perm_phone_state)
-        android.Manifest.permission.READ_CALL_LOG -> context.getString(R.string.perm_call_log)
         android.Manifest.permission.SEND_SMS -> context.getString(R.string.perm_sms)
         android.Manifest.permission.READ_CONTACTS -> context.getString(R.string.perm_contacts)
         android.Manifest.permission.POST_NOTIFICATIONS -> context.getString(R.string.perm_notifications)

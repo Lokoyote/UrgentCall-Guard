@@ -37,7 +37,13 @@ class MainActivity : AppCompatActivity() {
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { refreshAll() }
+    ) {
+        refreshAll()
+        // Si la notification initiale a été supprimée silencieusement par le
+        // système faute de POST_NOTIFICATIONS au moment du démarrage du
+        // service, on la reposte maintenant qu'elle vient d'être accordée.
+        UrgentCallForegroundService.refreshNotification(this)
+    }
 
     // Se déclenche dès que le volume système change (boutons physiques, autre app, etc.)
     // pour actualiser l'affichage du volume actuel en temps réel, sans attendre onResume().
@@ -154,6 +160,9 @@ class MainActivity : AppCompatActivity() {
     private fun refreshAll() {
         refreshSummary()
         refreshPermissions()
+        if (PreferencesHelper.isServiceEnabled(this)) {
+            UrgentCallForegroundService.refreshNotification(this)
+        }
     }
 
     private fun refreshSummary() {

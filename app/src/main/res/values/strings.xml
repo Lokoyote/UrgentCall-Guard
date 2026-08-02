@@ -26,12 +26,11 @@
 
     <string name="permissions_title">État des autorisations</string>
     <string name="privacy_notice_title">🔒 Aucune information n\'est partagée</string>
-    <string name="privacy_notice_body">Tout le traitement (numéros, SMS, contacts) reste sur votre téléphone : rien n\'est envoyé à un serveur ni à un tiers. Ces autorisations sont nécessaires pour détecter l\'appel entrant (téléphone), identifier l\'appelant (contacts / journal d\'appels), envoyer le SMS de rappel (SMS) et ajuster le volume au bon moment (Ne pas déranger).</string>
+    <string name="privacy_notice_body">Tout le traitement (numéros, SMS, contacts) reste sur votre téléphone : rien n\'est envoyé à un serveur ni à un tiers. Ces autorisations sont nécessaires pour détecter l\'appel entrant (téléphone), identifier l\'appelant (contacts), envoyer le SMS de rappel (SMS) et ajuster le volume au bon moment (Ne pas déranger).</string>
     <string name="permission_granted_state">Autorisé</string>
     <string name="permission_missing_state">Manquant</string>
 
     <string name="perm_phone_state">Détection des appels</string>
-    <string name="perm_call_log">Journal d\'appels</string>
     <string name="perm_sms">Envoi de SMS</string>
     <string name="perm_contacts">Accès aux contacts</string>
     <string name="perm_notifications">Notifications</string>
