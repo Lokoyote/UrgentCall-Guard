@@ -31,6 +31,12 @@ class UrgentCallForegroundService : Service() {
         const val CHANNEL_ID = "urgent_call_guard_foreground"
         const val NOTIFICATION_ID = 1001
 
+        // Diffusée quand l'utilisateur (ou l'OS/le constructeur) supprime la
+        // notification malgré setOngoing(true) — certains launchers/OEM (Xiaomi,
+        // "tout effacer"...) l'autorisent quand même. Sert à la recréer aussitôt.
+        private const val ACTION_NOTIFICATION_DISMISSED =
+            "com.urgentcall.guard.action.NOTIFICATION_DISMISSED"
+
         fun start(context: Context) {
             ContextCompat.startForegroundService(context, Intent(context, UrgentCallForegroundService::class.java))
         }
@@ -66,6 +72,12 @@ class UrgentCallForegroundService : Service() {
                 openAppIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
+            val deleteIntent = PendingIntent.getBroadcast(
+                context,
+                0,
+                Intent(ACTION_NOTIFICATION_DISMISSED).setPackage(context.packageName),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
             val lowVolume = isLowVolumeOrSilent(context)
             val title = context.getString(
                 if (lowVolume) R.string.notif_title_low_volume else R.string.notif_title_monitoring
@@ -80,14 +92,19 @@ class UrgentCallForegroundService : Service() {
                 .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(contentIntent)
+                .setDeleteIntent(deleteIntent)
                 .build()
         }
     }
 
-    // Se déclenche à chaque changement de volume ou de mode sonnerie pour
-    // que la notification reflète toujours l'état réel, sans attendre un appel.
+    // Se déclenche à chaque changement de volume/mode sonnerie (pour rafraîchir
+    // le contenu) ET quand la notification est supprimée (pour la recréer aussitôt).
+    // Un seul et même receiver, un seul flux : jamais deux notifications à la fois,
+    // notify() avec le même NOTIFICATION_ID remplaçant toujours la précédente.
     private val stateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            // refreshNotification() vérifie déjà isServiceEnabled() en interne :
+            // si la surveillance a été arrêtée entretemps, rien ne se recrée.
             refreshNotification(context)
         }
     }
@@ -98,6 +115,7 @@ class UrgentCallForegroundService : Service() {
         val filter = IntentFilter().apply {
             addAction("android.media.VOLUME_CHANGED_ACTION")
             addAction(AudioManager.RINGER_MODE_CHANGED_ACTION)
+            addAction(ACTION_NOTIFICATION_DISMISSED)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(stateReceiver, filter, Context.RECEIVER_NOT_EXPORTED)

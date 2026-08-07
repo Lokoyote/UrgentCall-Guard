@@ -41,6 +41,22 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/whitelistNotice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/indigo_50"
+                android:padding="12dp"
+                android:text="@string/whitelist_notice"
+                android:textColor="@color/indigo_700"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
                 android:id="@+id/emergencyNumbersNotice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +68,7 @@
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/whitelistNotice" />
 
             <TextView
                 android:id="@+id/whitelistEmptyText"
@@ -116,6 +132,20 @@
             android:layout_height="match_parent"
             android:visibility="gone">
 
+            <TextView
+                android:id="@+id/blacklistNotice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@color/indigo_50"
+                android:padding="12dp"
+                android:text="@string/blacklist_notice"
+                android:textColor="@color/indigo_700"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:id="@+id/optionsCard"
                 android:layout_width="match_parent"
@@ -123,7 +153,7 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:padding="16dp"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/blacklistNotice">
 
                 <LinearLayout
                     android:layout_width="match_parent"
