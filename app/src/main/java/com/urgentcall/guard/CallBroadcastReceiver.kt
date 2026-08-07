@@ -55,13 +55,15 @@ class CallBroadcastReceiver : BroadcastReceiver() {
                     // suite (annule le restore différé encore en attente et arrête
                     // le service éphémère si plus aucune fenêtre n'est active).
                     EmergencyTimerManager.clearWindow(context, number)
-                } else if (!isBlocked && number != null && WhitelistHelper.isWhitelistedAndImmediate(context, number)) {
-                    // Contact prioritaire (liste blanche manuelle) -> franchissement immédiat
+                } else if (!isBlocked && number != null && WhitelistHelper.isWhitelisted(context, number)) {
+                    // Contact prioritaire (liste blanche manuelle ou favori synchronisé) -> franchissement immédiat
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
                 } else if (!isBlocked && number != null && PreferencesHelper.isAllowSystemFavorites(context) &&
                     ContactsHelper.isSystemFavorite(context, number)
                 ) {
-                    // Contact favori du téléphone -> franchissement immédiat
+                    // Filet de sécurité : les favoris sont normalement synchronisés dans la
+                    // liste blanche (WhitelistHelper.syncSystemFavorites), donc déjà couverts
+                    // par la branche ci-dessus. Ce cas ne sert qu'en cas de synchro pas encore faite.
                     AudioManagerHelper.forceMaxVolumeRingtone(context)
                 }
             }

@@ -14,7 +14,6 @@ object PreferencesHelper {
     private const val KEY_VOLUME_THRESHOLD = "volumeThreshold"
     private const val KEY_TIMER_MINUTES = "timerMinutes"
     private const val KEY_SMS_TEMPLATE = "smsTemplate"
-    private const val KEY_IMMEDIATE_WHITELIST = "immediateWhitelistBreakthrough"
     private const val KEY_ALLOW_SYSTEM_FAVORITES = "allowSystemFavorites"
     private const val KEY_AUTO_RESTORE_DELAY = "autoRestoreDelayAfterCallSec"
     private const val KEY_HOW_IT_WORKS_EXPANDED = "howItWorksExpanded"
@@ -51,13 +50,6 @@ object PreferencesHelper {
 
     fun setSmsTemplate(context: Context, value: String) {
         prefs(context).edit().putString(KEY_SMS_TEMPLATE, value).apply()
-    }
-
-    fun isImmediateWhitelistBreakthrough(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_IMMEDIATE_WHITELIST, true)
-
-    fun setImmediateWhitelistBreakthrough(context: Context, value: Boolean) {
-        prefs(context).edit().putBoolean(KEY_IMMEDIATE_WHITELIST, value).apply()
     }
 
     fun isAllowSystemFavorites(context: Context): Boolean =

@@ -70,6 +70,51 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/whitelistNotice" />
 
+            <LinearLayout
+                android:id="@+id/whitelistOptionsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/emergencyNumbersNotice">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_system_favorites_label"
+                        android:textColor="@color/slate_900"
+                        android:textSize="13sp" />
+
+                    <Switch
+                        android:id="@+id/systemFavoritesSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/whitelistSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/whitelist_manual_section"
+                android:textColor="@color/slate_500"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/whitelistOptionsCard" />
+
             <TextView
                 android:id="@+id/whitelistEmptyText"
                 android:layout_width="wrap_content"
@@ -80,7 +125,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/emergencyNumbersNotice" />
+                app:layout_constraintTop_toBottomOf="@id/whitelistSectionLabel" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/whitelistRecyclerView"
@@ -91,7 +136,7 @@
                 app:layout_constraintBottom_toTopOf="@id/whitelistActionsBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/emergencyNumbersNotice" />
+                app:layout_constraintTop_toBottomOf="@id/whitelistSectionLabel" />
 
             <LinearLayout
                 android:id="@+id/whitelistActionsBar"

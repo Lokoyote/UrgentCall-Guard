@@ -52,12 +52,12 @@
     <string name="settings_volume_threshold_label">Seuil de volume déclencheur (pourcentage)</string>
     <string name="settings_timer_label">Fenêtre de rappel prioritaire (minutes)</string>
     <string name="settings_sms_template_label">Message SMS d\'urgence (utilisez {TIMER} pour insérer le nombre de minutes)</string>
-    <string name="settings_immediate_whitelist_label">Les contacts de la liste blanche déclencheront la sonnerie automatiquement</string>
-    <string name="settings_system_favorites_label">Inclure les favoris du téléphone comme prioritaires</string>
     <string name="settings_save_button">Enregistrer</string>
     <string name="settings_saved_toast">Réglages enregistrés</string>
 
     <!-- Liste blanche -->
+    <string name="settings_system_favorites_label">Inclure les favoris du téléphone comme prioritaires</string>
+    <string name="whitelist_manual_section">Ajoutés manuellement</string>
     <string name="whitelist_title">Liste blanche</string>
     <string name="whitelist_notice">✅ Les numéros ajoutés ici sont vos contacts prioritaires : dès qu\'ils appellent, la sonnerie passe automatiquement à plein volume, même si le téléphone est en mode silencieux ou vibreur. Idéal pour les proches qui doivent pouvoir vous joindre en cas d\'urgence.</string>
     <string name="whitelist_empty">Aucun contact prioritaire. Ajoutez-en un ci-dessous.</string>

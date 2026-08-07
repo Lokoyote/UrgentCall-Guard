@@ -65,44 +65,6 @@
             android:inputType="textMultiLine"
             android:lines="4" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/settings_immediate_whitelist_label"
-                android:textColor="@color/slate_900" />
-
-            <Switch
-                android:id="@+id/immediateWhitelistSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/settings_system_favorites_label"
-                android:textColor="@color/slate_900" />
-
-            <Switch
-                android:id="@+id/systemFavoritesSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveSettingsButton"
             style="@style/Widget.Material3.Button"

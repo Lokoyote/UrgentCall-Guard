@@ -35,6 +35,7 @@ class ListsActivity : AppCompatActivity() {
     private lateinit var whitelistRecyclerView: RecyclerView
     private lateinit var whitelistEmptyText: TextView
     private lateinit var whitelistAdapter: WhitelistAdapter
+    private lateinit var systemFavoritesSwitch: Switch
 
     // --- Liste noire ---
     private lateinit var blacklistTabContent: View
@@ -67,7 +68,10 @@ class ListsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // Rafraîchit au retour de l'écran "Ajouter depuis les contacts"
-        // (qui peut avoir ajouté à la liste blanche ou à la liste noire)
+        // (qui peut avoir ajouté à la liste blanche ou à la liste noire),
+        // et resynchronise les favoris système (changés côté téléphone, ou
+        // permission Contacts accordée entretemps).
+        WhitelistHelper.syncSystemFavorites(this)
         refreshWhitelist()
         refreshBlacklist()
     }
@@ -83,8 +87,20 @@ class ListsActivity : AppCompatActivity() {
         whitelistTabContent = findViewById(R.id.whitelistTabContent)
         whitelistRecyclerView = findViewById(R.id.whitelistRecyclerView)
         whitelistEmptyText = findViewById(R.id.whitelistEmptyText)
+        systemFavoritesSwitch = findViewById(R.id.systemFavoritesSwitch)
         val addButton = findViewById<MaterialButton>(R.id.addContactButton)
         val addFromContactsButton = findViewById<MaterialButton>(R.id.addFromContactsButton)
+
+        systemFavoritesSwitch.isChecked = PreferencesHelper.isAllowSystemFavorites(this)
+        systemFavoritesSwitch.setOnCheckedChangeListener { _, checked ->
+            PreferencesHelper.setAllowSystemFavorites(this, checked)
+            WhitelistHelper.syncSystemFavorites(this)
+            refreshWhitelist()
+        }
+
+        // Aligne tout de suite la liste blanche sur les favoris actuels du téléphone
+        // (utile si l'option était déjà activée et que des favoris ont changé entretemps).
+        WhitelistHelper.syncSystemFavorites(this)
 
         whitelistAdapter = WhitelistAdapter(WhitelistHelper.getContacts(this).toMutableList()) { contact ->
             WhitelistHelper.removeContact(this, contact.phoneNumber)

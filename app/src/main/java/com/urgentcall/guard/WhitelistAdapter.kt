@@ -25,9 +25,16 @@ class WhitelistAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val contact = contacts[position]
-        holder.name.text = contact.name
+        holder.name.text = if (contact.isSystemFavorite) "⭐ ${contact.name}" else contact.name
         holder.phone.text = contact.phoneNumber
-        holder.deleteButton.setOnClickListener { onDelete(contact) }
+        if (contact.isSystemFavorite) {
+            // Non décochable individuellement : seul le switch "Inclure les favoris..."
+            // permet de retirer ces entrées, toutes en même temps.
+            holder.deleteButton.visibility = View.GONE
+        } else {
+            holder.deleteButton.visibility = View.VISIBLE
+            holder.deleteButton.setOnClickListener { onDelete(contact) }
+        }
     }
 
     override fun getItemCount(): Int = contacts.size
