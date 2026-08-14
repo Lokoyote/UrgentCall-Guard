@@ -14,12 +14,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Rendre le wrapper Gradle exécutable
+        run: chmod +x ./gradlew
       - name: Configuration de Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+        # Pas de "gradle-version" fixé en dur ici : l'action détecte automatiquement
+        # la version depuis gradle/wrapper/gradle-wrapper.properties. Ça évite que le
+        # workflow se désynchronise du wrapper à chaque montée de version d'AGP
+        # (c'est exactement ce qui a cassé le build précédent : action figée sur 8.9,
+        # wrapper passé à 8.11.1 pour AGP 8.9.1 -> version minimale non respectée).
       - name: Compiler l'APK debug
-        run: gradle assembleDebug
+        run: ./gradlew assembleDebug
+        # ./gradlew (le wrapper du projet), pas "gradle" (le binaire mis en cache par
+        # l'action) : c'est ce qui garantit que la version utilisée pour builder est
+        # bien celle déclarée dans gradle-wrapper.properties, pas une version à part.
       - name: Publier l'APK en tant qu'artefact téléchargeable
         uses: actions/upload-artifact@v4
         with:
