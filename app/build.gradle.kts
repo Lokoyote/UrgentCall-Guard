@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.urgentcall.guard"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.urgentcall.guard"
