@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.urgentcall.guard"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.urgentcall.guard"
@@ -62,7 +62,4 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
-    // Détection mobile/fixe (pour savoir si le SMS d'urgence peut être reçu).
-    // Port Android de Google libphonenumber, license Apache-2.0, 100% hors-ligne.
-    implementation(libs.libphonenumber.android)
 }

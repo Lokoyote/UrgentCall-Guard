@@ -15,7 +15,6 @@ object PreferencesHelper {
     private const val KEY_TIMER_MINUTES = "timerMinutes"
     private const val KEY_SMS_TEMPLATE = "smsTemplate"
     private const val KEY_ALLOW_SYSTEM_FAVORITES = "allowSystemFavorites"
-    private const val KEY_MOBILE_DETECTION_COUNTRIES = "mobileDetectionCountries"
     private const val KEY_AUTO_RESTORE_DELAY = "autoRestoreDelayAfterCallSec"
     private const val KEY_HOW_IT_WORKS_EXPANDED = "howItWorksExpanded"
 
@@ -58,22 +57,6 @@ object PreferencesHelper {
 
     fun setAllowSystemFavorites(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_ALLOW_SYSTEM_FAVORITES, value).apply()
-    }
-
-    /**
-     * Pays (codes ISO 3166-1 alpha-2) utilisés pour interpréter les numéros au
-     * format national (ex. "0612345678", sans indicatif) et déterminer s'ils
-     * sont mobiles ou fixes. Les numéros internationaux (+33...) n'en ont pas
-     * besoin, leur pays se déduit automatiquement de l'indicatif.
-     * Par défaut : France uniquement.
-     */
-    fun getMobileDetectionCountries(context: Context): Set<String> =
-        prefs(context).getStringSet(KEY_MOBILE_DETECTION_COUNTRIES, setOf("FR")) ?: setOf("FR")
-
-    fun setMobileDetectionCountries(context: Context, countries: Set<String>) {
-        // On repasse par un HashSet neuf : SharedPreferences déconseille de
-        // réutiliser/muter l'instance retournue par getStringSet().
-        prefs(context).edit().putStringSet(KEY_MOBILE_DETECTION_COUNTRIES, HashSet(countries)).apply()
     }
 
     fun getAutoRestoreDelaySec(context: Context): Int =

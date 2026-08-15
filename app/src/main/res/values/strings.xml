@@ -52,19 +52,6 @@
     <string name="settings_volume_threshold_label">Seuil de volume déclencheur (pourcentage)</string>
     <string name="settings_timer_label">Fenêtre de rappel prioritaire (minutes)</string>
     <string name="settings_sms_template_label">Message SMS d\'urgence (utilisez {TIMER} pour insérer le nombre de minutes)</string>
-    <string name="settings_mobile_detection_label">Détection mobile / fixe</string>
-    <string name="settings_mobile_detection_notice">📱 Un SMS ne peut être reçu que par un mobile. Cochez le ou les pays où vivent vos proches : ça sert à reconnaître si un numéro local (sans indicatif, ex. 06 12 34 56 78) manqué est un mobile, pour décider s\'il est utile de lui envoyer le SMS d\'urgence. Les numéros internationaux (+33...) sont reconnus automatiquement, sans avoir besoin de cette liste.</string>
-    <string name="country_fr">🇫🇷 France</string>
-    <string name="country_be">🇧🇪 Belgique</string>
-    <string name="country_ch">🇨🇭 Suisse</string>
-    <string name="country_lu">🇱🇺 Luxembourg</string>
-    <string name="country_ca">🇨🇦 Canada</string>
-    <string name="country_ma">🇲🇦 Maroc</string>
-    <string name="country_dz">🇩🇿 Algérie</string>
-    <string name="country_tn">🇹🇳 Tunisie</string>
-    <string name="settings_dnd_label">Mode Ne pas déranger du téléphone</string>
-    <string name="settings_dnd_notice">Le mode "Ne pas déranger" (Android) coupe les sonneries, notifications et vibrations selon des règles que vous définissez (horaires, contacts autorisés, etc.). Urgent Call Guard s\'appuie sur ce même mécanisme système pour forcer la sonnerie à plein volume quand c\'est nécessaire. Android ne permettant pas d\'ouvrir directement cet écran précis, ce raccourci ouvre les réglages du téléphone : cherchez ensuite "Ne pas déranger" (généralement dans Sons &amp; vibrations).</string>
-    <string name="settings_dnd_button">Ouvrir les réglages du téléphone</string>
     <string name="settings_save_button">Enregistrer</string>
     <string name="settings_saved_toast">Réglages enregistrés</string>
 
@@ -104,33 +91,4 @@
     <string name="blacklist_label_hint">Nom ou raison (optionnel)</string>
     <string name="blacklist_default_label">Numéro ignoré</string>
     <string name="blacklist_add_button">Ajouter à la liste des numéros ignorés</string>
-
-    <!-- Onglet Ressources : autres bloqueurs -->
-    <string name="resources_tab_title">Autres bloqueurs</string>
-    <string name="resources_intro">💡 UrgentCall Guard ne fait pas de blocage massif basé sur une base de données de spam — c\'est un choix. Combiner un vrai bloqueur anti-démarchage avec UrgentCall Guard évite aussi d\'envoyer le SMS d\'urgence à un numéro de spam qui vous a fait un appel manqué (puisqu\'il sera bloqué avant même que ça arrive). Voici plusieurs applications gratuites qui font ça très bien, à utiliser en complément.</string>
-
-    <string name="resource_saracroche_name">Saracroche</string>
-    <string name="resource_saracroche_description">Bloque automatiquement plus de 15 millions de numéros de démarchage (base ARCEP + signalements communautaires). Open source (GPLv3), sans pub ni tracking. Réservée à un usage en France.</string>
-    <string name="resource_saracroche_website">https://saracroche.org</string>
-    <string name="resource_saracroche_fdroid">https://f-droid.org/en/packages/com.cbouvat.android.saracroche/</string>
-
-    <string name="resource_callblocker_name">Call Blocker</string>
-    <string name="resource_callblocker_description">Blocage par numéro précis ou par préfixe (ex. 0800 bloque tous les 0800xxxxxx), historique des appels bloqués, double SIM. 100% open source (GPLv3), aucune connexion internet requise.</string>
-    <string name="resource_callblocker_fdroid">https://f-droid.org/en/packages/com.callblocker/</string>
-    <string name="resource_callblocker_source">https://gitlab.com/abelardodiaz/web26-050-call-blocker</string>
-
-    <string name="resource_wincalls_name">WinCalls</string>
-    <string name="resource_wincalls_description">Application française : blocage du démarchage (préfixes ARCEP), des numéros usurpés et du "voisinage". Gratuite, sans pub, sans collecte de données (tout se fait en local). ⚠️ Contrairement aux deux ci-dessus, elle n\'est pas open source : disponible uniquement sur Google Play, code fermé.</string>
-    <string name="resource_wincalls_website">https://wincalls.fr</string>
-    <string name="resource_wincalls_playstore">https://play.google.com/store/apps/details?id=com.wincalls.spamblocker</string>
-
-    <string name="resource_fdroid_explore_name">F-Droid</string>
-    <string name="resource_fdroid_explore_description">Le catalogue d\'applications 100% libres et open source pour Android. Une recherche \"call blocker\" ou \"spam\" y fait apparaître d\'autres alternatives, régulièrement mises à jour.</string>
-    <string name="resource_fdroid_explore_url">https://f-droid.org/en/packages/?q=call+blocker</string>
-
-    <string name="resource_button_website">Site web</string>
-    <string name="resource_button_fdroid">F-Droid</string>
-    <string name="resource_button_source">Code source</string>
-    <string name="resource_button_fdroid_explore">Explorer sur F-Droid</string>
-    <string name="resource_button_playstore">Google Play</string>
 </resources>
