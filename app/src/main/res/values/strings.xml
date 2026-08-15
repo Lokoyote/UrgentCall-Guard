@@ -63,8 +63,8 @@
     <string name="country_dz">🇩🇿 Algérie</string>
     <string name="country_tn">🇹🇳 Tunisie</string>
     <string name="settings_dnd_label">Mode Ne pas déranger du téléphone</string>
-    <string name="settings_dnd_notice">Le mode "Ne pas déranger" (Android) coupe les sonneries, notifications et vibrations selon des règles que vous définissez (horaires, contacts autorisés, etc.). Urgent Call Guard s\'appuie sur ce même mécanisme système pour forcer la sonnerie à plein volume quand c\'est nécessaire — ce raccourci ouvre directement son réglage.</string>
-    <string name="settings_dnd_button">Ouvrir le mode Ne pas déranger</string>
+    <string name="settings_dnd_notice">Le mode "Ne pas déranger" (Android) coupe les sonneries, notifications et vibrations selon des règles que vous définissez (horaires, contacts autorisés, etc.). Urgent Call Guard s\'appuie sur ce même mécanisme système pour forcer la sonnerie à plein volume quand c\'est nécessaire. Android ne permettant pas d\'ouvrir directement cet écran précis, ce raccourci ouvre les réglages du téléphone : cherchez ensuite "Ne pas déranger" (généralement dans Sons &amp; vibrations).</string>
+    <string name="settings_dnd_button">Ouvrir les réglages du téléphone</string>
     <string name="settings_save_button">Enregistrer</string>
     <string name="settings_saved_toast">Réglages enregistrés</string>
 

@@ -63,10 +63,14 @@ class SettingsActivity : AppCompatActivity() {
         saveButton.setOnClickListener { saveSettings() }
 
         openDndSettingsButton.setOnClickListener {
-            // Ouvre directement l'écran système "Ne pas déranger" (pour l'activer/le
-            // configurer) — différent de l'écran d'autorisation ACCESS_NOTIFICATION_POLICY,
-            // déjà géré par un bouton dédié sur l'écran d'accueil.
-            startActivity(Intent(Settings.ACTION_ZEN_MODE_SETTINGS))
+            // Il n'existe pas d'action publique stable pour ouvrir directement l'écran
+            // de configuration "Ne pas déranger" (Settings.ACTION_ZEN_MODE_SETTINGS
+            // existe bien... mais est annotée @hide dans l'AOSP : une API interne, non
+            // accessible depuis le SDK public — d'où l'erreur de compilation. On ouvre
+            // donc l'app Réglages générale ; ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
+            // n'est pas un meilleur choix ici, c'est l'écran de permission déjà utilisé
+            // par le bouton dédié sur l'écran d'accueil, pas la configuration DND elle-même.
+            startActivity(Intent(Settings.ACTION_SETTINGS))
         }
     }
 
