@@ -28,6 +28,7 @@ class ListsActivity : AppCompatActivity() {
         const val EXTRA_INITIAL_TAB = "initial_tab"
         const val TAB_WHITELIST = 0
         const val TAB_BLACKLIST = 1
+        const val TAB_RESOURCES = 2
     }
 
     // --- Liste blanche ---
@@ -45,6 +46,9 @@ class ListsActivity : AppCompatActivity() {
     private lateinit var blockHiddenSwitch: Switch
     private lateinit var blockUnknownSwitch: Switch
 
+    // --- Ressources (autres bloqueurs libres) ---
+    private lateinit var resourcesTabContent: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lists)
@@ -52,6 +56,7 @@ class ListsActivity : AppCompatActivity() {
 
         setupWhitelistTab()
         setupBlacklistTab()
+        setupResourcesTab()
 
         val tabLayout = findViewById<TabLayout>(R.id.listsTabLayout)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -79,6 +84,7 @@ class ListsActivity : AppCompatActivity() {
     private fun showTab(position: Int) {
         whitelistTabContent.visibility = if (position == TAB_WHITELIST) View.VISIBLE else View.GONE
         blacklistTabContent.visibility = if (position == TAB_BLACKLIST) View.VISIBLE else View.GONE
+        resourcesTabContent.visibility = if (position == TAB_RESOURCES) View.VISIBLE else View.GONE
     }
 
     // ----------------------- Liste blanche -----------------------
@@ -244,6 +250,42 @@ class ListsActivity : AppCompatActivity() {
                 }
                 override fun afterTextChanged(s: Editable?) {}
             })
+        }
+    }
+
+    // ----------------------- Ressources -----------------------
+
+    private fun setupResourcesTab() {
+        resourcesTabContent = findViewById(R.id.resourcesTabContent)
+
+        findViewById<MaterialButton>(R.id.saracrocheWebsiteButton).setOnClickListener {
+            openUrl(getString(R.string.resource_saracroche_website))
+        }
+        findViewById<MaterialButton>(R.id.saracrocheFdroidButton).setOnClickListener {
+            openUrl(getString(R.string.resource_saracroche_fdroid))
+        }
+        findViewById<MaterialButton>(R.id.callBlockerFdroidButton).setOnClickListener {
+            openUrl(getString(R.string.resource_callblocker_fdroid))
+        }
+        findViewById<MaterialButton>(R.id.callBlockerSourceButton).setOnClickListener {
+            openUrl(getString(R.string.resource_callblocker_source))
+        }
+        findViewById<MaterialButton>(R.id.wincallsWebsiteButton).setOnClickListener {
+            openUrl(getString(R.string.resource_wincalls_website))
+        }
+        findViewById<MaterialButton>(R.id.wincallsPlayStoreButton).setOnClickListener {
+            openUrl(getString(R.string.resource_wincalls_playstore))
+        }
+        findViewById<MaterialButton>(R.id.fdroidExploreButton).setOnClickListener {
+            openUrl(getString(R.string.resource_fdroid_explore_url))
+        }
+    }
+
+    private fun openUrl(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+        } catch (e: Exception) {
+            Toast.makeText(this, url, Toast.LENGTH_LONG).show()
         }
     }
 }

@@ -109,8 +109,18 @@ class CallBroadcastReceiver : BroadcastReceiver() {
             return
         }
 
-        // 3) Numéro inconnu (absent du répertoire), si l'option est activée
-        if (BlacklistHelper.isBlockUnknownNumbers(context) && !ContactsHelper.isNumberInContacts(context, number)) {
+        // 3) Numéro inconnu (absent du répertoire), si l'option est activée — sauf
+        // si le numéro est dans la liste blanche (manuel ou favori synchronisé) :
+        // un contact prioritaire ne doit jamais être traité comme "inconnu", même
+        // quand le lookup natif Android échoue à faire correspondre un numéro
+        // étranger dont le format diffère de celui stocké dans les contacts
+        // (indicatif présent ou non, espaces...) — c'est justement le cas qui posait
+        // problème : le SMS ne partait jamais, avant même d'atteindre la logique
+        // liste blanche / détection mobile plus bas.
+        if (BlacklistHelper.isBlockUnknownNumbers(context) &&
+            !WhitelistHelper.isWhitelisted(context, number) &&
+            !ContactsHelper.isNumberInContacts(context, number)
+        ) {
             Log.i("UrgentCallGuard", "Numéro $number inconnu du répertoire : SMS/volume ignorés (réglage liste noire).")
             return
         }
@@ -134,10 +144,29 @@ class CallBroadcastReceiver : BroadcastReceiver() {
             val timerMins = PreferencesHelper.getTimerMinutes(context)
             val smsText = PreferencesHelper.getSmsTemplate(context).replace("{TIMER}", timerMins.toString())
 
-            SmsHelper.sendSms(context, number, smsText)
+            // La détection mobile/fixe s'applique à tout le monde, y compris la
+            // liste blanche et les favoris synchronisés : un contact prioritaire
+            // dont la ligne est fixe ne peut de toute façon pas recevoir de SMS,
+            // inutile de tenter l'envoi. La liste blanche continue en revanche de
+            // primer ailleurs (sonnerie forcée à l'étape 2, et contournement du
+            // filtre "numéros inconnus" à l'étape 3 ci-dessus).
+            val shouldSendSms = PhoneNumberTypeHelper.isProbablyMobile(context, number)
+
+            if (shouldSendSms) {
+                SmsHelper.sendSms(context, number, smsText)
+                Log.i("UrgentCallGuard", "SMS d'urgence envoyé à $number.")
+            } else {
+                Log.i(
+                    "UrgentCallGuard",
+                    "Numéro $number identifié comme ligne fixe : SMS non envoyé (ne peut pas en recevoir)."
+                )
+            }
+
+            // La fenêtre de rappel prioritaire reste ouverte dans tous les cas : si $number
+            // rappelle, ça doit sonner fort, que le SMS d'alerte ait pu être envoyé ou non.
             EmergencyTimerManager.startRecallTimer(context, number, timerMins, currentRingerMode, volumePercent)
 
-            Log.i("UrgentCallGuard", "SMS d'urgence envoyé à $number. Fenêtre de $timerMins min activée.")
+            Log.i("UrgentCallGuard", "Fenêtre de rappel de $timerMins min activée pour $number.")
         } else {
             Log.i("UrgentCallGuard", "Volume sonore suffisant ($volumePercent% > $threshold%). Pas d'action.")
         }

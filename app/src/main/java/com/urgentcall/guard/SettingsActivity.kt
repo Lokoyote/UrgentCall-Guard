@@ -1,6 +1,9 @@
 package com.urgentcall.guard
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
@@ -14,6 +17,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var timerInput: EditText
     private lateinit var smsTemplateInput: EditText
 
+    // Association case à cocher <-> code pays ISO 3166-1 alpha-2, pour la détection mobile/fixe.
+    private lateinit var countryCheckboxes: List<Pair<CheckBox, String>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -24,6 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         timerInput = findViewById(R.id.timerMinutesInput)
         smsTemplateInput = findViewById(R.id.smsTemplateInput)
         val saveButton = findViewById<android.widget.Button>(R.id.saveSettingsButton)
+        val openDndSettingsButton = findViewById<android.widget.Button>(R.id.openDndSettingsButton)
 
         // Chargement des valeurs actuelles
         val currentThreshold = PreferencesHelper.getVolumeThreshold(this)
@@ -31,6 +38,19 @@ class SettingsActivity : AppCompatActivity() {
         volumeValueText.text = "$currentThreshold%"
         timerInput.setText(PreferencesHelper.getTimerMinutes(this).toString())
         smsTemplateInput.setText(PreferencesHelper.getSmsTemplate(this))
+
+        countryCheckboxes = listOf(
+            findViewById<CheckBox>(R.id.countryCheckboxFR) to "FR",
+            findViewById<CheckBox>(R.id.countryCheckboxBE) to "BE",
+            findViewById<CheckBox>(R.id.countryCheckboxCH) to "CH",
+            findViewById<CheckBox>(R.id.countryCheckboxLU) to "LU",
+            findViewById<CheckBox>(R.id.countryCheckboxCA) to "CA",
+            findViewById<CheckBox>(R.id.countryCheckboxMA) to "MA",
+            findViewById<CheckBox>(R.id.countryCheckboxDZ) to "DZ",
+            findViewById<CheckBox>(R.id.countryCheckboxTN) to "TN"
+        )
+        val selectedCountries = PreferencesHelper.getMobileDetectionCountries(this)
+        countryCheckboxes.forEach { (checkbox, code) -> checkbox.isChecked = code in selectedCountries }
 
         volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -41,6 +61,17 @@ class SettingsActivity : AppCompatActivity() {
         })
 
         saveButton.setOnClickListener { saveSettings() }
+
+        openDndSettingsButton.setOnClickListener {
+            // Il n'existe pas d'action publique stable pour ouvrir directement l'écran
+            // de configuration "Ne pas déranger" (Settings.ACTION_ZEN_MODE_SETTINGS
+            // existe bien... mais est annotée @hide dans l'AOSP : une API interne, non
+            // accessible depuis le SDK public — d'où l'erreur de compilation. On ouvre
+            // donc l'app Réglages générale ; ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
+            // n'est pas un meilleur choix ici, c'est l'écran de permission déjà utilisé
+            // par le bouton dédié sur l'écran d'accueil, pas la configuration DND elle-même.
+            startActivity(Intent(Settings.ACTION_SETTINGS))
+        }
     }
 
     private fun saveSettings() {
@@ -53,6 +84,11 @@ class SettingsActivity : AppCompatActivity() {
         PreferencesHelper.setVolumeThreshold(this, threshold)
         PreferencesHelper.setTimerMinutes(this, timerMinutes)
         PreferencesHelper.setSmsTemplate(this, smsTemplate)
+
+        val selectedCountries = countryCheckboxes.filter { (checkbox, _) -> checkbox.isChecked }
+            .map { (_, code) -> code }
+            .toSet()
+        PreferencesHelper.setMobileDetectionCountries(this, selectedCountries)
 
         // Met à jour immédiatement la notification permanente (nouveau seuil pris en compte)
         UrgentCallForegroundService.refreshNotification(this)
