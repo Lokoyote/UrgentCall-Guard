@@ -35,6 +35,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var howItWorksBody: TextView
     private lateinit var howItWorksChevron: TextView
 
+    // --- Ressources (autres bloqueurs d'appels) ---
+    private lateinit var saracrocheWebsiteButton: MaterialButton
+    private lateinit var saracrocheFdroidButton: MaterialButton
+    private lateinit var callBlockerFdroidButton: MaterialButton
+    private lateinit var callBlockerSourceButton: MaterialButton
+    private lateinit var wincallsWebsiteButton: MaterialButton
+    private lateinit var wincallsPlayStoreButton: MaterialButton
+    private lateinit var fdroidExploreButton: MaterialButton
+
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
@@ -72,6 +81,13 @@ class MainActivity : AppCompatActivity() {
         howItWorksHeader = findViewById(R.id.howItWorksHeader)
         howItWorksBody = findViewById(R.id.howItWorksBody)
         howItWorksChevron = findViewById(R.id.howItWorksChevron)
+        saracrocheWebsiteButton = findViewById(R.id.saracrocheWebsiteButton)
+        saracrocheFdroidButton = findViewById(R.id.saracrocheFdroidButton)
+        callBlockerFdroidButton = findViewById(R.id.callBlockerFdroidButton)
+        callBlockerSourceButton = findViewById(R.id.callBlockerSourceButton)
+        wincallsWebsiteButton = findViewById(R.id.wincallsWebsiteButton)
+        wincallsPlayStoreButton = findViewById(R.id.wincallsPlayStoreButton)
+        fdroidExploreButton = findViewById(R.id.fdroidExploreButton)
 
         applyHowItWorksState(PreferencesHelper.isHowItWorksExpanded(this))
         howItWorksHeader.setOnClickListener {
@@ -110,6 +126,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/lokoyote")))
         }
 
+        saracrocheWebsiteButton.setOnClickListener { openUrl(getString(R.string.resource_saracroche_website)) }
+        saracrocheFdroidButton.setOnClickListener { openUrl(getString(R.string.resource_saracroche_fdroid)) }
+        callBlockerFdroidButton.setOnClickListener { openUrl(getString(R.string.resource_callblocker_fdroid)) }
+        callBlockerSourceButton.setOnClickListener { openUrl(getString(R.string.resource_callblocker_source)) }
+        wincallsWebsiteButton.setOnClickListener { openUrl(getString(R.string.resource_wincalls_website)) }
+        wincallsPlayStoreButton.setOnClickListener { openUrl(getString(R.string.resource_wincalls_playstore)) }
+        fdroidExploreButton.setOnClickListener { openUrl(getString(R.string.resource_fdroid_explore_url)) }
+
         settingsCard.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
         whitelistCard.setOnClickListener {
             startActivity(Intent(this, ListsActivity::class.java).putExtra(ListsActivity.EXTRA_INITIAL_TAB, ListsActivity.TAB_WHITELIST))
@@ -142,6 +166,14 @@ class MainActivity : AppCompatActivity() {
     private fun applyHowItWorksState(expanded: Boolean) {
         howItWorksBody.visibility = if (expanded) View.VISIBLE else View.GONE
         howItWorksChevron.text = getString(if (expanded) R.string.chevron_up else R.string.chevron_down)
+    }
+
+    private fun openUrl(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(this, url, android.widget.Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun requestIgnoreBatteryOptimizations() {

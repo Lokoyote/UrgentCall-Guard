@@ -14,6 +14,7 @@ class WhitelistAdapter(
     class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.contactName)
         val phone: TextView = view.findViewById(R.id.contactPhone)
+        val countryWarning: TextView = view.findViewById(R.id.contactCountryWarning)
         val deleteButton: android.widget.Button = view.findViewById(R.id.deleteContactButton)
     }
 
@@ -27,6 +28,13 @@ class WhitelistAdapter(
         val contact = contacts[position]
         holder.name.text = if (contact.isSystemFavorite) "⭐ ${contact.name}" else contact.name
         holder.phone.text = contact.phoneNumber
+        holder.countryWarning.visibility =
+            if (!PhoneNumberTypeHelper.matchesAnySelectedCountry(holder.itemView.context, contact.phoneNumber)) {
+                holder.countryWarning.text = holder.itemView.context.getString(R.string.contact_country_unrecognized_badge)
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         if (contact.isSystemFavorite) {
             // Non décochable individuellement : seul le switch "Inclure les favoris..."
             // permet de retirer ces entrées, toutes en même temps.

@@ -28,7 +28,6 @@ class ListsActivity : AppCompatActivity() {
         const val EXTRA_INITIAL_TAB = "initial_tab"
         const val TAB_WHITELIST = 0
         const val TAB_BLACKLIST = 1
-        const val TAB_RESOURCES = 2
     }
 
     // --- Liste blanche ---
@@ -46,9 +45,6 @@ class ListsActivity : AppCompatActivity() {
     private lateinit var blockHiddenSwitch: Switch
     private lateinit var blockUnknownSwitch: Switch
 
-    // --- Ressources (autres bloqueurs libres) ---
-    private lateinit var resourcesTabContent: View
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lists)
@@ -56,7 +52,6 @@ class ListsActivity : AppCompatActivity() {
 
         setupWhitelistTab()
         setupBlacklistTab()
-        setupResourcesTab()
 
         val tabLayout = findViewById<TabLayout>(R.id.listsTabLayout)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -84,7 +79,6 @@ class ListsActivity : AppCompatActivity() {
     private fun showTab(position: Int) {
         whitelistTabContent.visibility = if (position == TAB_WHITELIST) View.VISIBLE else View.GONE
         blacklistTabContent.visibility = if (position == TAB_BLACKLIST) View.VISIBLE else View.GONE
-        resourcesTabContent.visibility = if (position == TAB_RESOURCES) View.VISIBLE else View.GONE
     }
 
     // ----------------------- Liste blanche -----------------------
@@ -136,6 +130,7 @@ class ListsActivity : AppCompatActivity() {
         val nameInput = dialogView.findViewById<AutoCompleteTextView>(R.id.dialogNameInput)
         val phoneInput = dialogView.findViewById<EditText>(R.id.dialogPhoneInput)
         setupContactAutocomplete(nameInput, phoneInput)
+        setupCountryWarning(dialogView, phoneInput)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.whitelist_add_title)
@@ -238,6 +233,48 @@ class ListsActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Affiche un avertissement quand le numéro saisi (format national, sans "+")
+     * ne correspond à aucun pays actuellement sélectionné dans les Réglages :
+     * risque de mobile étranger non reconnu -> SMS d'urgence potentiellement
+     * pas envoyé. Permet d'ajouter le pays concerné directement depuis le dialogue.
+     */
+    private fun setupCountryWarning(dialogView: View, phoneInput: EditText) {
+        val warningContainer = dialogView.findViewById<View>(R.id.dialogCountryWarningContainer)
+        val countrySearchInput = dialogView.findViewById<AutoCompleteTextView>(R.id.dialogCountrySearchInput)
+
+        fun refreshWarning() {
+            val number = phoneInput.text.toString().trim()
+            val ambiguous = number.isNotEmpty() && !PhoneNumberTypeHelper.matchesAnySelectedCountry(this, number)
+            warningContainer.visibility = if (ambiguous) View.VISIBLE else View.GONE
+        }
+
+        CountrySearchHelper.setupSearchInput(
+            this,
+            countrySearchInput,
+            excludedCodes = { PreferencesHelper.getMobileDetectionCountries(this).ifEmpty { setOf("FR") } }
+        ) { code ->
+            val updated = PreferencesHelper.getMobileDetectionCountries(this).ifEmpty { setOf("FR") } + code
+            PreferencesHelper.setMobileDetectionCountries(this, updated)
+            Toast.makeText(
+                this,
+                getString(R.string.country_added_toast, CountrySearchHelper.label(this, code)),
+                Toast.LENGTH_SHORT
+            ).show()
+            refreshWarning()
+            // Le badge "pays non reconnu" des autres contacts en liste blanche peut changer.
+            refreshWhitelist()
+        }
+
+        phoneInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = refreshWarning()
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        refreshWarning()
+    }
+
     /** Désactive le bouton "Ajouter" tant que le champ numéro est vide. */
     private fun bindConfirmEnabledOnPhoneFilled(dialog: AlertDialog, phoneInput: EditText) {
         dialog.setOnShowListener {
@@ -253,39 +290,4 @@ class ListsActivity : AppCompatActivity() {
         }
     }
 
-    // ----------------------- Ressources -----------------------
-
-    private fun setupResourcesTab() {
-        resourcesTabContent = findViewById(R.id.resourcesTabContent)
-
-        findViewById<MaterialButton>(R.id.saracrocheWebsiteButton).setOnClickListener {
-            openUrl(getString(R.string.resource_saracroche_website))
-        }
-        findViewById<MaterialButton>(R.id.saracrocheFdroidButton).setOnClickListener {
-            openUrl(getString(R.string.resource_saracroche_fdroid))
-        }
-        findViewById<MaterialButton>(R.id.callBlockerFdroidButton).setOnClickListener {
-            openUrl(getString(R.string.resource_callblocker_fdroid))
-        }
-        findViewById<MaterialButton>(R.id.callBlockerSourceButton).setOnClickListener {
-            openUrl(getString(R.string.resource_callblocker_source))
-        }
-        findViewById<MaterialButton>(R.id.wincallsWebsiteButton).setOnClickListener {
-            openUrl(getString(R.string.resource_wincalls_website))
-        }
-        findViewById<MaterialButton>(R.id.wincallsPlayStoreButton).setOnClickListener {
-            openUrl(getString(R.string.resource_wincalls_playstore))
-        }
-        findViewById<MaterialButton>(R.id.fdroidExploreButton).setOnClickListener {
-            openUrl(getString(R.string.resource_fdroid_explore_url))
-        }
-    }
-
-    private fun openUrl(url: String) {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
-        } catch (e: Exception) {
-            Toast.makeText(this, url, Toast.LENGTH_LONG).show()
-        }
-    }
 }

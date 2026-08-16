@@ -53,6 +53,23 @@ object PhoneNumberTypeHelper {
         return results.any { it != Kind.FIXED_LINE }
     }
 
+    /**
+     * Indique si un numéro au format national correspond à au moins un des
+     * pays actuellement sélectionnés dans les réglages. Sert à avertir
+     * l'utilisateur qu'un numéro ajouté en liste blanche/noire risque de ne
+     * pas être correctement analysé (ex. mobile étranger dont le pays n'est
+     * pas dans la liste) : la détection mobile/fixe se rabat alors sur le
+     * comportement "par prudence" décrit dans isProbablyMobile.
+     * Les numéros au format international (+...) ou vides ne sont pas
+     * concernés : ils sont toujours retournés comme "reconnus".
+     */
+    fun matchesAnySelectedCountry(context: Context, rawNumber: String): Boolean {
+        val trimmed = rawNumber.trim()
+        if (trimmed.isEmpty() || trimmed.startsWith("+")) return true
+        val regions = PreferencesHelper.getMobileDetectionCountries(context).ifEmpty { setOf("FR") }
+        return regions.any { region -> classify(context, trimmed, region) != null }
+    }
+
     private fun classify(context: Context, number: String, region: String?): Kind? {
         return try {
             val phoneUtil = util(context)

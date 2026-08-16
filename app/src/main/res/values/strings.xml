@@ -53,18 +53,8 @@
     <string name="settings_timer_label">Fenêtre de rappel prioritaire (minutes)</string>
     <string name="settings_sms_template_label">Message SMS d\'urgence (utilisez {TIMER} pour insérer le nombre de minutes)</string>
     <string name="settings_mobile_detection_label">Détection mobile / fixe</string>
-    <string name="settings_mobile_detection_notice">📱 Un SMS ne peut être reçu que par un mobile. Cochez le ou les pays où vivent vos proches : ça sert à reconnaître si un numéro local (sans indicatif, ex. 06 12 34 56 78) manqué est un mobile, pour décider s\'il est utile de lui envoyer le SMS d\'urgence. Les numéros internationaux (+33...) sont reconnus automatiquement, sans avoir besoin de cette liste.</string>
-    <string name="country_fr">🇫🇷 France</string>
-    <string name="country_be">🇧🇪 Belgique</string>
-    <string name="country_ch">🇨🇭 Suisse</string>
-    <string name="country_lu">🇱🇺 Luxembourg</string>
-    <string name="country_ca">🇨🇦 Canada</string>
-    <string name="country_ma">🇲🇦 Maroc</string>
-    <string name="country_dz">🇩🇿 Algérie</string>
-    <string name="country_tn">🇹🇳 Tunisie</string>
-    <string name="settings_dnd_label">Mode Ne pas déranger du téléphone</string>
-    <string name="settings_dnd_notice">Le mode "Ne pas déranger" (Android) coupe les sonneries, notifications et vibrations selon des règles que vous définissez (horaires, contacts autorisés, etc.). Urgent Call Guard s\'appuie sur ce même mécanisme système pour forcer la sonnerie à plein volume quand c\'est nécessaire. Android ne permettant pas d\'ouvrir directement cet écran précis, ce raccourci ouvre les réglages du téléphone : cherchez ensuite "Ne pas déranger" (généralement dans Sons &amp; vibrations).</string>
-    <string name="settings_dnd_button">Ouvrir les réglages du téléphone</string>
+    <string name="settings_mobile_detection_notice">📱 Un SMS ne peut être reçu que par un mobile. Recherchez et ajoutez le ou les pays où vivent vos proches : ça sert à reconnaître si un numéro local (sans indicatif, ex. 06 12 34 56 78) manqué est un mobile, pour décider s\'il est utile de lui envoyer le SMS d\'urgence. Les numéros internationaux (+33...) sont reconnus automatiquement, sans avoir besoin de cette liste.</string>
+    <string name="settings_country_search_hint">Rechercher un pays…</string>
     <string name="settings_save_button">Enregistrer</string>
     <string name="settings_saved_toast">Réglages enregistrés</string>
 
@@ -81,6 +71,10 @@
     <string name="whitelist_add_manual_button">Ajouter manuellement</string>
     <string name="whitelist_add_from_contacts_button">Ajouter depuis les contacts</string>
     <string name="whitelist_cancel_button">Annuler</string>
+    <string name="country_warning_text">⚠️ Ce numéro ne correspond à aucun pays sélectionné dans les Réglages. S\'il s\'agit d\'un mobile étranger, le SMS d\'urgence pourrait ne pas être envoyé. Ajoutez le pays :</string>
+    <string name="country_warning_search_hint">Rechercher le pays de ce numéro…</string>
+    <string name="country_added_toast">%1$s ajouté à la détection mobile/fixe (Réglages)</string>
+    <string name="contact_country_unrecognized_badge">⚠️ Pays non reconnu (Réglages)</string>
     <string name="whitelist_delete_button">Supprimer</string>
 
     <!-- Ajout depuis les contacts -->

@@ -21,4 +21,33 @@
         android:hint="@string/whitelist_phone_hint"
         android:inputType="phone" />
 
+    <LinearLayout
+        android:id="@+id/dialogCountryWarningContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/amber_50"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="@string/country_warning_text"
+            android:textColor="@color/amber_600"
+            android:textSize="12sp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/dialogCountrySearchInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:hint="@string/country_warning_search_hint"
+            android:inputType="text"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
 </LinearLayout>
