@@ -43,18 +43,6 @@ Vous restez ainsi joignable en cas d'urgence, sans sonner en permanence pour le 
 
 Rien de tout cela ne quitte votre téléphone — aucun serveur, aucune télémétrie, aucune publicité.
 
-### Installation
-
-Deux façons d'obtenir l'application :
-
-1. **Depuis les releases GitHub** : téléchargez le dernier `.apk` depuis l'onglet [Releases](../../releases), puis installez-le (autorisez l'installation depuis des sources inconnues si demandé).
-2. **En compilant vous-même** :
-   ```bash
-   git clone https://github.com/<votre-compte>/UrgentCallGuard.git
-   cd UrgentCallGuard
-   ./gradlew assembleDebug
-   ```
-   L'APK debug se trouve ensuite dans `app/build/outputs/apk/debug/`.
 
 ### Compilation d'une version release signée
 
@@ -125,18 +113,6 @@ You stay reachable in a genuine emergency, without your phone ringing loudly for
 
 None of this ever leaves your phone — no server, no telemetry, no ads.
 
-### Installation
-
-Two ways to get the app:
-
-1. **From GitHub Releases**: download the latest `.apk` from the [Releases](../../releases) tab, then install it (allow installs from unknown sources if prompted).
-2. **Build it yourself**:
-   ```bash
-   git clone https://github.com/<your-account>/UrgentCallGuard.git
-   cd UrgentCallGuard
-   ./gradlew assembleDebug
-   ```
-   The debug APK will be in `app/build/outputs/apk/debug/`.
 
 ### Building a signed release
 
