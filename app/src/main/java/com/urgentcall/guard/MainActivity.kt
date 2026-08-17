@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var howItWorksHeader: LinearLayout
     private lateinit var howItWorksBody: TextView
     private lateinit var howItWorksChevron: TextView
+    private lateinit var resourcesHeader: LinearLayout
+    private lateinit var resourcesBody: LinearLayout
+    private lateinit var resourcesChevron: TextView
 
     // --- Ressources (autres bloqueurs d'appels) ---
     private lateinit var saracrocheWebsiteButton: MaterialButton
@@ -81,6 +84,9 @@ class MainActivity : AppCompatActivity() {
         howItWorksHeader = findViewById(R.id.howItWorksHeader)
         howItWorksBody = findViewById(R.id.howItWorksBody)
         howItWorksChevron = findViewById(R.id.howItWorksChevron)
+        resourcesHeader = findViewById(R.id.resourcesHeader)
+        resourcesBody = findViewById(R.id.resourcesBody)
+        resourcesChevron = findViewById(R.id.resourcesChevron)
         saracrocheWebsiteButton = findViewById(R.id.saracrocheWebsiteButton)
         saracrocheFdroidButton = findViewById(R.id.saracrocheFdroidButton)
         callBlockerFdroidButton = findViewById(R.id.callBlockerFdroidButton)
@@ -94,6 +100,13 @@ class MainActivity : AppCompatActivity() {
             val newState = howItWorksBody.visibility != View.VISIBLE
             PreferencesHelper.setHowItWorksExpanded(this, newState)
             applyHowItWorksState(newState)
+        }
+
+        applyResourcesState(PreferencesHelper.isResourcesExpanded(this))
+        resourcesHeader.setOnClickListener {
+            val newState = resourcesBody.visibility != View.VISIBLE
+            PreferencesHelper.setResourcesExpanded(this, newState)
+            applyResourcesState(newState)
         }
 
         val settingsCard = findViewById<LinearLayout>(R.id.settingsCard)
@@ -166,6 +179,11 @@ class MainActivity : AppCompatActivity() {
     private fun applyHowItWorksState(expanded: Boolean) {
         howItWorksBody.visibility = if (expanded) View.VISIBLE else View.GONE
         howItWorksChevron.text = getString(if (expanded) R.string.chevron_up else R.string.chevron_down)
+    }
+
+    private fun applyResourcesState(expanded: Boolean) {
+        resourcesBody.visibility = if (expanded) View.VISIBLE else View.GONE
+        resourcesChevron.text = getString(if (expanded) R.string.chevron_up else R.string.chevron_down)
     }
 
     private fun openUrl(url: String) {

@@ -18,6 +18,7 @@ object PreferencesHelper {
     private const val KEY_MOBILE_DETECTION_COUNTRIES = "mobileDetectionCountries"
     private const val KEY_AUTO_RESTORE_DELAY = "autoRestoreDelayAfterCallSec"
     private const val KEY_HOW_IT_WORKS_EXPANDED = "howItWorksExpanded"
+    private const val KEY_RESOURCES_EXPANDED = "resourcesExpanded"
 
     private const val DEFAULT_SMS_TEMPLATE =
         "[UrgentCall Guard] Mon telephone est en mode silencieux. S'il s'agit d'une URGENCE, rappelez-moi dans les {TIMER} min pour faire sonner mon telephone a volume MAX."
@@ -84,5 +85,12 @@ object PreferencesHelper {
 
     fun setHowItWorksExpanded(context: Context, expanded: Boolean) {
         prefs(context).edit().putBoolean(KEY_HOW_IT_WORKS_EXPANDED, expanded).apply()
+    }
+
+    fun isResourcesExpanded(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_RESOURCES_EXPANDED, false)
+
+    fun setResourcesExpanded(context: Context, expanded: Boolean) {
+        prefs(context).edit().putBoolean(KEY_RESOURCES_EXPANDED, expanded).apply()
     }
 }
